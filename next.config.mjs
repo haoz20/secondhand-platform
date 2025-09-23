@@ -4,6 +4,14 @@ const nextConfig = {
   experimental: {
     instrumentationHook: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/app/second-hand-marketplace/favicon.ico',
+        destination: '/favicon.ico',
+      },
+    ];
+  }
 };
 
 export default nextConfig;
