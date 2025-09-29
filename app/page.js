@@ -35,7 +35,9 @@ export default function Home() {
             </Link>
           </div>
           <button
-            onClick={() => signOut({ callbackUrl: '/second-hand-marketplace' })}
+            onClick={() => signOut({ 
+              callbackUrl: `${window.location.origin}/second-hand-marketplace` 
+            })}
             className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
           >
             Sign Out

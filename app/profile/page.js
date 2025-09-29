@@ -48,7 +48,9 @@ export default function Profile() {
                 {session.user?.name || session.user?.email}
               </span>
               <button
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={() => signOut({ 
+                  callbackUrl: `${window.location.origin}/second-hand-marketplace` 
+                })}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
               >
                 Sign Out
