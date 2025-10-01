@@ -5,7 +5,7 @@ import AuthProvider from "./components/AuthProvider"; // Import the provider
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Second Hand Marketplace",
+  title: "YaungWel",
   description: "A platform for buying and selling second-hand items",
 };
 
