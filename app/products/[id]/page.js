@@ -67,7 +67,7 @@ export default function ProductDetail() {
 
       if (response.ok) {
         alert('Order created successfully! Check your profile to manage orders.');
-        router.push('/profile');
+        router.push(`/${session.user.id}`);
       } else {
         alert(data.message || 'Failed to create order');
       }
