@@ -28,7 +28,7 @@ export default function NavigationBar() {
                   Sell Item
                 </Link>
                 <Link
-                  href="/profile"
+                  href={`/users/${session.user.id}`}
                   className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   My Profile
@@ -65,7 +65,7 @@ export default function NavigationBar() {
           <div className="md:hidden flex items-center space-x-2">
             {session ? (
               <Link
-                href="/profile"
+                href={`/users/${session.user.id}`}
                 className="bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Profile

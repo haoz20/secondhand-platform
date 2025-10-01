@@ -12,11 +12,14 @@ export default function UserProfile() {
   const { data: session } = useSession();
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
+  const [buyOrders, setBuyOrders] = useState([]);
+  const [sellOrders, setSellOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deleting, setDeleting] = useState(null);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
+  const [activeTab, setActiveTab] = useState('products'); // 'products', 'buying', 'selling'
 
   // Check if the current user is viewing their own profile
   const isOwnProfile = session?.user?.id === params.id;
@@ -24,8 +27,11 @@ export default function UserProfile() {
   useEffect(() => {
     if (params.id) {
       fetchUserAndProducts();
+      if (isOwnProfile) {
+        fetchOrders();
+      }
     }
-  }, [params.id]);
+  }, [params.id, isOwnProfile]);
 
   const fetchUserAndProducts = async () => {
     try {
@@ -57,6 +63,28 @@ export default function UserProfile() {
     }
   };
 
+  const fetchOrders = async () => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      
+      // Fetch buy orders (where user is buyer)
+      const buyResponse = await fetch(`${apiUrl}/orders?role=buyer`);
+      if (buyResponse.ok) {
+        const buyData = await buyResponse.json();
+        setBuyOrders(buyData.orders || []);
+      }
+      
+      // Fetch sell orders (where user is seller)
+      const sellResponse = await fetch(`${apiUrl}/orders?role=seller`);
+      if (sellResponse.ok) {
+        const sellData = await sellResponse.json();
+        setSellOrders(sellData.orders || []);
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
   const getConditionBadgeColor = (condition) => {
     const colors = {
       new: 'bg-green-100 text-green-800',
@@ -69,9 +97,18 @@ export default function UserProfile() {
   };
 
   const formatCondition = (condition) => {
-    return condition.split('_').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+    return condition?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || '';
+  };
+
+  const getOrderStatusBadgeColor = (status) => {
+    const colors = {
+      pending: 'bg-yellow-100 text-yellow-800',
+      confirmed: 'bg-blue-100 text-blue-800',
+      shipped: 'bg-purple-100 text-purple-800',
+      delivered: 'bg-green-100 text-green-800',
+      cancelled: 'bg-red-100 text-red-800'
+    };
+    return colors[status] || 'bg-gray-100 text-gray-800';
   };
 
   const handleDeleteProduct = async (productId) => {
@@ -80,9 +117,7 @@ export default function UserProfile() {
       return;
     }
 
-    if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
-      return;
-    }
+    if (!confirm('Are you sure you want to delete this product?')) return;
 
     setDeleting(productId);
     try {
@@ -91,26 +126,20 @@ export default function UserProfile() {
         method: 'DELETE',
       });
 
-      if (response.ok) {
-        alert('Product deleted successfully!');
-        fetchUserAndProducts(); // Refresh the list
-      } else {
-        const data = await response.json();
-        alert(data.message || 'Failed to delete product');
-      }
+      if (!response.ok) throw new Error('Failed to delete product');
+
+      await fetchUserAndProducts();
+      alert('Product deleted successfully!');
     } catch (error) {
       console.error('Error deleting product:', error);
-      alert('An error occurred. Please try again.');
+      alert('Failed to delete product. Please try again.');
     } finally {
       setDeleting(null);
     }
   };
 
   const handleDeleteAccount = async () => {
-    if (!isOwnProfile) {
-      alert('You can only delete your own account');
-      return;
-    }
+    if (!isOwnProfile) return;
 
     setDeletingAccount(true);
     try {
@@ -119,49 +148,35 @@ export default function UserProfile() {
         method: 'DELETE',
       });
 
-      if (response.ok) {
-        alert('Your account has been deleted successfully.');
-        await signOut({ redirect: false });
-        router.push('/login');
-      } else {
-        const data = await response.json();
-        alert(data.message || 'Failed to delete account');
-      }
+      if (!response.ok) throw new Error('Failed to delete account');
+
+      await signOut({ redirect: false });
+      router.push('/login');
     } catch (error) {
       console.error('Error deleting account:', error);
-      alert('An error occurred. Please try again.');
-    } finally {
+      alert('Failed to delete account. Please try again.');
       setDeletingAccount(false);
-      setShowDeleteAccountModal(false);
     }
   };
 
   const handleMarkAsSold = async (productId) => {
-    if (!isOwnProfile) {
-      alert('You can only mark your own products as sold');
-      return;
-    }
+    if (!isOwnProfile) return;
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
       const response = await fetch(`${apiUrl}/products/${productId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isSold: true }),
       });
 
-      if (response.ok) {
-        alert('Product marked as sold!');
-        fetchUserAndProducts(); // Refresh the list
-      } else {
-        const data = await response.json();
-        alert(data.message || 'Failed to update product');
-      }
+      if (!response.ok) throw new Error('Failed to mark as sold');
+
+      await fetchUserAndProducts();
+      alert('Product marked as sold!');
     } catch (error) {
-      console.error('Error updating product:', error);
-      alert('An error occurred. Please try again.');
+      console.error('Error marking product as sold:', error);
+      alert('Failed to mark product as sold. Please try again.');
     }
   };
 
@@ -169,8 +184,8 @@ export default function UserProfile() {
     return (
       <div className="flex-grow flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading profile...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading profile...</p>
         </div>
       </div>
     );
@@ -295,124 +310,322 @@ export default function UserProfile() {
           </div>
         </div>
 
-        {/* User's Products */}
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Products by {user.name || user.username}</h2>
-          
-          {products.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📭</div>
-              <p className="text-gray-500 text-lg">This user hasn't listed any products yet.</p>
+        {/* Tabs - Only show for own profile */}
+        {isOwnProfile && (
+          <div className="bg-white rounded-xl shadow-md mb-8 overflow-hidden">
+            <div className="flex border-b">
+              <button
+                onClick={() => setActiveTab('products')}
+                className={`flex-1 px-6 py-4 text-sm font-medium transition ${
+                  activeTab === 'products'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                📦 My Products ({products.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('buying')}
+                className={`flex-1 px-6 py-4 text-sm font-medium transition ${
+                  activeTab === 'buying'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                🛒 Buying Orders ({buyOrders.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('selling')}
+                className={`flex-1 px-6 py-4 text-sm font-medium transition ${
+                  activeTab === 'selling'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                💰 Selling Orders ({sellOrders.length})
+              </button>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <div
-                  key={product._id}
-                  className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:shadow-xl hover:border-blue-300 transition-all duration-300"
-                >
-                  {/* Product Image */}
-                  <Link href={`/products/${product._id}`}>
-                    <div className="relative h-48 bg-gray-100">
-                      <Image
-                        src={
-                          Array.isArray(product.imageUrl) && product.imageUrl.length > 0
-                            ? product.imageUrl[0]
-                            : product.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image'
-                        }
-                        alt={product.productName}
-                        fill
-                        className={`object-cover ${product.isSold ? 'opacity-50' : ''}`}
-                      />
-                      
-                      {/* Sold Overlay Badge */}
-                      {product.isSold && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
-                          <div className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold text-xl transform rotate-12">
-                            SOLD
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div className="absolute top-2 right-2">
-                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getConditionBadgeColor(product.condition)}`}>
-                          {formatCondition(product.condition)}
-                        </span>
-                      </div>
-                      <div className="absolute top-2 left-2">
-                        <span className="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 capitalize">
-                          {product.category}
-                        </span>
-                      </div>
-                    </div>
+          </div>
+        )}
+
+        {/* Content based on active tab */}
+        {(!isOwnProfile || activeTab === 'products') && (
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              {isOwnProfile ? 'My Products' : `Products by ${user.name || user.username}`}
+            </h2>
+            
+            {products.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">📭</div>
+                <p className="text-gray-500 text-lg">
+                  {isOwnProfile ? "You haven't listed any products yet." : "This user hasn't listed any products yet."}
+                </p>
+                {isOwnProfile && (
+                  <Link
+                    href="/sell"
+                    className="mt-4 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    List Your First Product
                   </Link>
-
-                  {/* Product Details */}
-                  <div className="p-4">
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                  <div
+                    key={product._id}
+                    className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:shadow-xl hover:border-blue-300 transition-all duration-300"
+                  >
+                    {/* Product Image */}
                     <Link href={`/products/${product._id}`}>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-blue-600 transition truncate">
-                        {product.productName}
-                      </h3>
-                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                        {product.description}
-                      </p>
-
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="text-2xl font-bold text-blue-600">
-                          ${product.price.toFixed(2)}
+                      <div className="relative h-48 bg-gray-100">
+                        <Image
+                          src={
+                            Array.isArray(product.imageUrl) && product.imageUrl.length > 0
+                              ? product.imageUrl[0]
+                              : product.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image'
+                          }
+                          alt={product.productName}
+                          fill
+                          className={`object-cover ${product.isSold ? 'opacity-50' : ''}`}
+                        />
+                        
+                        {/* Sold Overlay Badge */}
+                        {product.isSold && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+                            <div className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold text-xl transform rotate-12">
+                              SOLD OUT
+                            </div>
+                          </div>
+                        )}
+                        
+                        <div className="absolute top-2 right-2">
+                          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getConditionBadgeColor(product.condition)}`}>
+                            {formatCondition(product.condition)}
+                          </span>
                         </div>
-                        <div className="text-xs text-gray-500">
-                          Year: {product.year}
+                        <div className="absolute top-2 left-2">
+                          <span className="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 capitalize">
+                            {product.category}
+                          </span>
                         </div>
-                      </div>
-
-                      <div className="pt-3 border-t border-gray-200">
-                        <p className="text-xs text-gray-500">
-                          Listed {new Date(product.createdAt).toLocaleDateString()}
-                        </p>
                       </div>
                     </Link>
-                    
-                    {/* Action Buttons - Only visible for own profile */}
-                    {isOwnProfile && (
-                      <div className="mt-4 pt-3 border-t border-gray-200 flex gap-2">
-                        {!product.isSold && (
-                          <>
-                            <Link
-                              href={`/products/${product._id}/edit`}
-                              className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition text-center"
-                            >
-                              ✏️ Edit
-                            </Link>
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleMarkAsSold(product._id);
-                              }}
-                              className="flex-1 px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition"
-                            >
-                              ✅ Mark Sold
-                            </button>
-                          </>
-                        )}
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleDeleteProduct(product._id);
-                          }}
-                          disabled={deleting === product._id}
-                          className="flex-1 px-3 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
-                        >
-                          {deleting === product._id ? '...' : '🗑️ Delete'}
-                        </button>
-                      </div>
-                    )}
+
+                    {/* Product Details */}
+                    <div className="p-4">
+                      <Link href={`/products/${product._id}`}>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-blue-600 transition truncate">
+                          {product.productName}
+                        </h3>
+                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                          {product.description}
+                        </p>
+
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="text-2xl font-bold text-blue-600">
+                            ${product.price.toFixed(2)}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            Year: {product.year}
+                          </div>
+                        </div>
+
+                        <div className="pt-3 border-t border-gray-200">
+                          <p className="text-xs text-gray-500">
+                            Listed {new Date(product.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </Link>
+                      
+                      {/* Action Buttons - Only visible for own profile */}
+                      {isOwnProfile && (
+                        <div className="mt-4 pt-3 border-t border-gray-200 flex gap-2">
+                          {!product.isSold && (
+                            <>
+                              <Link
+                                href={`/products/${product._id}/edit`}
+                                className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition text-center"
+                              >
+                                ✏️ Edit
+                              </Link>
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleMarkAsSold(product._id);
+                                }}
+                                className="flex-1 px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition"
+                              >
+                                ✅ Mark Sold
+                              </button>
+                            </>
+                          )}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleDeleteProduct(product._id);
+                            }}
+                            disabled={deleting === product._id}
+                            className="flex-1 px-3 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                          >
+                            {deleting === product._id ? '...' : '🗑️ Delete'}
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Buy Orders Tab */}
+        {isOwnProfile && activeTab === 'buying' && (
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">My Purchases</h2>
+            
+            {buyOrders.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">🛒</div>
+                <p className="text-gray-500 text-lg">You haven't purchased any products yet.</p>
+                <Link
+                  href="/"
+                  className="mt-4 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+                >
+                  Browse Marketplace
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {buyOrders.map((order) => (
+                  <div key={order._id} className="border-2 border-gray-200 rounded-lg p-6 hover:shadow-lg transition">
+                    <div className="flex flex-col md:flex-row gap-6">
+                      {/* Product Image */}
+                      <div className="relative w-full md:w-48 h-48 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                        <Image
+                          src={
+                            Array.isArray(order.product?.imageUrl) && order.product.imageUrl.length > 0
+                              ? order.product.imageUrl[0]
+                              : order.product?.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image'
+                          }
+                          alt={order.product?.productName || 'Product'}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      
+                      {/* Order Details */}
+                      <div className="flex-grow">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <Link href={`/products/${order.product?._id}`}>
+                              <h3 className="text-xl font-semibold text-gray-900 hover:text-blue-600">
+                                {order.product?.productName}
+                              </h3>
+                            </Link>
+                            <p className="text-sm text-gray-600 mt-1">
+                              Sold by: <Link href={`/users/${order.product?.seller?._id}`} className="text-blue-600 hover:underline">
+                                {order.product?.seller?.name || order.product?.seller?.username}
+                              </Link>
+                            </p>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getOrderStatusBadgeColor(order.status)}`}>
+                            {order.status?.toUpperCase()}
+                          </span>
+                        </div>
+                        
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                          {order.product?.description}
+                        </p>
+                        
+                        <div className="flex justify-between items-center">
+                          <div className="text-2xl font-bold text-blue-600">
+                            ${order.product?.price?.toFixed(2)}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            Order Date: {new Date(order.orderDate).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Sell Orders Tab */}
+        {isOwnProfile && activeTab === 'selling' && (
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">My Sales</h2>
+            
+            {sellOrders.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">💰</div>
+                <p className="text-gray-500 text-lg">You haven't sold any products yet.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {sellOrders.map((order) => (
+                  <div key={order._id} className="border-2 border-gray-200 rounded-lg p-6 hover:shadow-lg transition">
+                    <div className="flex flex-col md:flex-row gap-6">
+                      {/* Product Image */}
+                      <div className="relative w-full md:w-48 h-48 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                        <Image
+                          src={
+                            Array.isArray(order.product?.imageUrl) && order.product.imageUrl.length > 0
+                              ? order.product.imageUrl[0]
+                              : order.product?.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image'
+                          }
+                          alt={order.product?.productName || 'Product'}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      
+                      {/* Order Details */}
+                      <div className="flex-grow">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <Link href={`/products/${order.product?._id}`}>
+                              <h3 className="text-xl font-semibold text-gray-900 hover:text-blue-600">
+                                {order.product?.productName}
+                              </h3>
+                            </Link>
+                            <p className="text-sm text-gray-600 mt-1">
+                              Bought by: <Link href={`/users/${order.buyer?._id}`} className="text-blue-600 hover:underline">
+                                {order.buyer?.name || order.buyer?.username}
+                              </Link>
+                            </p>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getOrderStatusBadgeColor(order.status)}`}>
+                            {order.status?.toUpperCase()}
+                          </span>
+                        </div>
+                        
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                          {order.product?.description}
+                        </p>
+                        
+                        <div className="flex justify-between items-center">
+                          <div className="text-2xl font-bold text-green-600">
+                            ${order.product?.price?.toFixed(2)}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            Order Date: {new Date(order.orderDate).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
