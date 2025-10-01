@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -81,94 +81,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation Bar */}
-      <nav className="bg-white shadow-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo */}
-            <div className="flex items-center">
-              <Link href="/" className="text-2xl font-bold text-blue-600">
-                🛒 SecondHand
-              </Link>
-            </div>
-
-            {/* Navigation Links */}
-            <div className="hidden md:flex items-center space-x-4">
-              {session ? (
-                <>
-                  <Link
-                    href="/dashboard"
-                    className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
-                  >
-                    Dashboard
-                  </Link>
-                  <Link
-                    href="/profile"
-                    className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
-                  >
-                    Profile
-                  </Link>
-                  <span className="text-gray-700 text-sm">
-                    {session.user?.name || session.user?.email}
-                  </span>
-                  <button
-                    onClick={() => signOut({ callbackUrl: window.location.origin })}
-                    className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition"
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    href="/signup"
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition"
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              )}
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden flex items-center space-x-2">
-              {session ? (
-                <Link
-                  href="/dashboard"
-                  className="bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Dashboard
-                </Link>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    href="/signup"
-                    className="bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <div className="flex flex-col flex-grow">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Welcome to SecondHand Marketplace
@@ -180,13 +95,14 @@ export default function Home() {
       </div>
 
       {/* Products Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-6">
+      <div className="flex-grow bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">Available Products</h2>
           {session && (
             <Link
-              href="/dashboard"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+              href="/sell"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
             >
               + Sell Item
             </Link>
@@ -212,20 +128,18 @@ export default function Home() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {products.map((product) => (
-              <div
+              <Link
                 key={product._id}
-                className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+                href={`/products/${product._id}`}
+                className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden block transform hover:-translate-y-1"
               >
                 {/* Product Image */}
                 <div className="relative h-48 bg-gray-200">
                   <Image
-                    src={product.imageUrl || '/placeholder-product.jpg'}
+                    src={Array.isArray(product.imageUrl) ? product.imageUrl[0] : product.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image'}
                     alt={product.productName}
                     fill
                     className="object-cover"
-                    onError={(e) => {
-                      e.target.src = '/placeholder-product.jpg';
-                    }}
                   />
                   <div className="absolute top-2 right-2">
                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getConditionBadgeColor(product.condition)}`}>
@@ -248,24 +162,14 @@ export default function Home() {
                     {product.description}
                   </p>
 
-                  {/* Price and Buy Button */}
+                  {/* Price and View Details */}
                   <div className="flex items-center justify-between">
                     <div className="text-2xl font-bold text-blue-600">
                       ${product.price.toFixed(2)}
                     </div>
-                    <button
-                      onClick={() => handleBuyProduct(product._id)}
-                      disabled={buyingProduct === product._id || !session}
-                      className={`px-4 py-2 rounded-lg font-medium transition ${
-                        !session
-                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                          : buyingProduct === product._id
-                          ? 'bg-blue-400 text-white cursor-wait'
-                          : 'bg-blue-600 text-white hover:bg-blue-700'
-                      }`}
-                    >
-                      {buyingProduct === product._id ? 'Buying...' : !session ? 'Login to Buy' : 'Buy Now'}
-                    </button>
+                    <div className="px-4 py-2 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition">
+                      View Details
+                    </div>
                   </div>
 
                   {/* Created Date */}
@@ -275,20 +179,12 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
-      </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">
-            © 2025 SecondHand Marketplace. All rights reserved.
-          </p>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }

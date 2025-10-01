@@ -1,9 +1,8 @@
 'use client';
 
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Link from "next/link";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -28,38 +27,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Navigation Bar */}
-      <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-gray-800">
-                SecondHand Marketplace
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">
-                Welcome, {session.user?.name || session.user?.email}
-              </span>
-              <Link
-                href="/profile"
-                className="px-4 py-2 text-gray-600 hover:text-gray-800"
-              >
-                Profile
-              </Link>
-              <button
-                onClick={() => signOut({ 
-                  callbackUrl: `${window.location.origin}/second-hand-marketplace` 
-                })}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-              >
-                Sign Out
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Dashboard Content */}
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div className="mb-8">

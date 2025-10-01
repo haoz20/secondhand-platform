@@ -37,6 +37,8 @@ export async function POST(request) {
             seller: session.user.id
         };
         
+        console.log('Product data to save:', productData);
+        
         const newProduct = new Product(productData);
         await newProduct.save();
         
@@ -46,7 +48,7 @@ export async function POST(request) {
     } catch (error) {
         console.error('Error creating product:', error);
         return Response.json(
-            { message: 'Failed to create product.' },
+            { message: error.message || 'Failed to create product.', error: error.toString() },
             { status: 500 }
         );
     }

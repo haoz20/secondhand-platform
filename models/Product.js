@@ -16,10 +16,21 @@ const ProductSchema = new mongoose.Schema(
       trim: true,
       maxlength: [1000, "Product description cannot be more than 1000 characters long."],
     },
+    year: {
+      type: Number,
+      required: [true, "Year of manufacture is required."],
+      min: [1900, "Year must be between 1900 and the current year."],
+      max: [new Date().getFullYear(), "Year must be between 1900 and the current year."],
+    },
     imageUrl: {
-      type: String,
+      type: [String],
       required: [true, "Product image URL is required."],
-      trim: true,
+      validate: {
+        validator: function(v) {
+          return Array.isArray(v) && v.length > 0;
+        },
+        message: 'At least one product image is required.'
+      }
     },
     condition: {
       type: String,
@@ -47,9 +58,11 @@ const ProductSchema = new mongoose.Schema(
   }
 );
 
+// Delete the model from cache if it exists to avoid schema conflicts
+if (mongoose.models.Product) {
+  delete mongoose.models.Product;
+}
 
-
-const Product =
-  mongoose.models.Product || mongoose.model("Product", ProductSchema);
+const Product = mongoose.model("Product", ProductSchema);
 
 export default Product;

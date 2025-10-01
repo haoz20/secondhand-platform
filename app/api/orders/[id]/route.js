@@ -18,7 +18,7 @@ export async function GET(request, { params }) {
             );
         }
         
-        const orderId = params.id;
+        const { id: orderId } = await params;
         
         const order = await Order.findById(orderId)
             .populate('buyer', 'username name email')
@@ -72,7 +72,7 @@ export async function PUT(request, { params }) {
             );
         }
         
-        const orderId = params.id;
+        const { id: orderId } = await params;
         const { status } = await request.json();
         
         if (!status) {
@@ -178,7 +178,7 @@ export async function DELETE(request, { params }) {
             );
         }
         
-        const orderId = params.id;
+        const { id: orderId } = await params;
         
         // Find the order first
         const order = await Order.findById(orderId)
