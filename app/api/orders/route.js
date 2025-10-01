@@ -115,6 +115,14 @@ export async function POST(request) {
             );
         }
         
+        // Check if product is already sold
+        if (product.isSold) {
+            return Response.json(
+                { message: 'This product has already been sold.' },
+                { status: 400 }
+            );
+        }
+        
         // Prevent users from buying their own products
         if (product.seller._id.toString() === session.user.id) {
             return Response.json(
@@ -146,6 +154,10 @@ export async function POST(request) {
         
         const newOrder = new Order(orderData);
         await newOrder.save();
+        
+        // Mark the product as sold
+        product.isSold = true;
+        await product.save();
         
         // Populate the order with buyer and product details
         await newOrder.populate([

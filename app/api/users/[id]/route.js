@@ -10,7 +10,7 @@ import bcrypt from 'bcryptjs';
 export async function GET(request, { params }) {
     try {
         await dbConnect();
-        const id = params.id;
+        const { id } = await params;
         
         // Find user but exclude password
         const user = await User.findById(id).select('-password');
@@ -46,7 +46,7 @@ export async function PUT(request, { params }) {
             );
         }
         
-        const id = params.id;
+        const { id } = await params;
         
         // Check if user is updating their own profile
         if (id !== session.user.id) {
@@ -143,7 +143,7 @@ export async function DELETE(request, { params }) {
             );
         }
         
-        const id = params.id;
+        const { id } = await params;
         
         // Check if user is deleting their own account
         if (id !== session.user.id) {

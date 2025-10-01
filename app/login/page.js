@@ -27,7 +27,7 @@ export default function Login() {
         return;
       }
 
-      router.replace('/dashboard'); // Or any other protected page
+      router.replace('/'); // Or any other protected page
     } catch (error) {
       setError('An error occurred. Please try again.');
       console.error('Login error:', error);

@@ -6,7 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 export async function GET(request, { params }) {
     try {
         await dbConnect();
-        const id = params.id;
+        const { id } = await params;
         const product = await Product.findById(id).populate('seller', 'username name email');
         
         if (!product) {
@@ -38,7 +38,7 @@ export async function PUT(request, { params }) {
             );
         }
         
-        const id = params.id;
+        const { id } = await params;
         const updateData = await request.json();
         
         // Find the product first
@@ -86,7 +86,7 @@ export async function PUT(request, { params }) {
             );
         }
         
-        const id = params.id;
+        const { id } = await params;
         
         // Find the product first
         const product = await Product.findById(id);
