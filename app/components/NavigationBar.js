@@ -28,16 +28,10 @@ export default function NavigationBar() {
                   Sell Item
                 </Link>
                 <Link
-                  href="/dashboard"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
-                >
-                  Dashboard
-                </Link>
-                <Link
                   href="/profile"
                   className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
-                  Profile
+                  My Profile
                 </Link>
                 <span className="text-gray-700 text-sm">
                   {session.user?.name || session.user?.email}
@@ -71,10 +65,10 @@ export default function NavigationBar() {
           <div className="md:hidden flex items-center space-x-2">
             {session ? (
               <Link
-                href="/dashboard"
+                href="/profile"
                 className="bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                Dashboard
+                Profile
               </Link>
             ) : (
               <>

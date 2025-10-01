@@ -51,7 +51,7 @@ export default function Home() {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Order created successfully! Check your dashboard to manage orders.');
+        alert('Order created successfully! Check your profile to manage orders.');
       } else {
         alert(data.message || 'Failed to create order');
       }
@@ -118,7 +118,7 @@ export default function Home() {
             <p className="text-gray-500 text-lg">No products available yet.</p>
             {session && (
               <Link
-                href="/dashboard"
+                href="/sell"
                 className="inline-block mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
               >
                 Be the first to sell!

@@ -15,6 +15,7 @@ export default function ProductDetail() {
   const [buying, setBuying] = useState(false);
   const [error, setError] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [showFullScreenImage, setShowFullScreenImage] = useState(false);
 
   useEffect(() => {
     if (params.id) {
@@ -65,8 +66,8 @@ export default function ProductDetail() {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Order created successfully! Check your dashboard to manage orders.');
-        router.push('/dashboard');
+        alert('Order created successfully! Check your profile to manage orders.');
+        router.push('/profile');
       } else {
         alert(data.message || 'Failed to create order');
       }
@@ -159,7 +160,10 @@ export default function ProductDetail() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
             {/* Product Image */}
             <div className="space-y-4">
-              <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100">
+              <div 
+                className="relative aspect-square rounded-xl overflow-hidden bg-gray-100 cursor-zoom-in"
+                onClick={() => setShowFullScreenImage(true)}
+              >
                 <Image
                   src={
                     Array.isArray(product.imageUrl) && product.imageUrl.length > 0
@@ -168,9 +172,12 @@ export default function ProductDetail() {
                   }
                   alt={product.productName}
                   fill
-                  className="object-cover"
+                  className="object-cover hover:scale-105 transition-transform duration-300"
                   priority
                 />
+                <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-lg text-sm">
+                  🔍 Click to enlarge
+                </div>
               </div>
               
               {/* Image Thumbnails - Only show if multiple images */}
@@ -260,15 +267,22 @@ export default function ProductDetail() {
               {product.seller && (
                 <div className="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
                   <h3 className="text-sm font-semibold text-gray-600 mb-2">Seller Information</h3>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
+                  <Link 
+                    href={`/users/${product.seller._id || product.seller}`}
+                    className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-lg transition group"
+                  >
+                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold group-hover:bg-blue-700 transition">
                       {product.seller.name?.charAt(0).toUpperCase() || 'S'}
                     </div>
-                    <div>
-                      <div className="font-semibold text-gray-900">{product.seller.name}</div>
-                      <div className="text-sm text-gray-600">{product.seller.email}</div>
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-900 group-hover:text-blue-600 transition">{product.seller.name}</div>
+                      <div className="text-sm text-gray-600">@{product.seller.username || 'seller'}</div>
                     </div>
-                  </div>
+                    <svg className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                  <p className="mt-2 text-xs text-gray-500">Click to view seller's profile and listings</p>
                 </div>
               )}
 
@@ -336,6 +350,75 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
+
+      {/* Full-Screen Image Modal */}
+      {showFullScreenImage && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4"
+          onClick={() => setShowFullScreenImage(false)}
+        >
+          <button
+            onClick={() => setShowFullScreenImage(false)}
+            className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-3 hover:bg-opacity-75 transition z-10"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          
+          <div className="relative w-full h-full flex flex-col items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            {/* Main Image */}
+            <div className="relative w-full max-w-5xl max-h-[80vh]">
+              <img
+                src={
+                  Array.isArray(product.imageUrl) && product.imageUrl.length > 0
+                    ? product.imageUrl[selectedImageIndex]
+                    : product.imageUrl || 'https://via.placeholder.com/800x800?text=No+Image'
+                }
+                alt={product.productName}
+                className="w-full h-full object-contain rounded-lg"
+              />
+            </div>
+
+            {/* Navigation Arrows (if multiple images) */}
+            {Array.isArray(product.imageUrl) && product.imageUrl.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedImageIndex((prev) => 
+                      prev === 0 ? product.imageUrl.length - 1 : prev - 1
+                    );
+                  }}
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 text-white rounded-full p-4 transition"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedImageIndex((prev) => 
+                      prev === product.imageUrl.length - 1 ? 0 : prev + 1
+                    );
+                  }}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 text-white rounded-full p-4 transition"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                {/* Image Counter */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-lg">
+                  {selectedImageIndex + 1} / {product.imageUrl.length}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
