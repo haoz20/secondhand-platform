@@ -32,6 +32,10 @@ const ProductSchema = new mongoose.Schema(
         message: 'At least one product image is required.'
       }
     },
+    isSold: {
+      type: Boolean,
+      default: false,
+    },
     condition: {
       type: String,
       required: true,

@@ -2,16 +2,24 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function UserProfile() {
   const params = useParams();
   const router = useRouter();
+  const { data: session } = useSession();
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleting, setDeleting] = useState(null);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
+
+  // Check if the current user is viewing their own profile
+  const isOwnProfile = session?.user?.id === params.id;
 
   useEffect(() => {
     if (params.id) {
@@ -66,6 +74,97 @@ export default function UserProfile() {
     ).join(' ');
   };
 
+  const handleDeleteProduct = async (productId) => {
+    if (!isOwnProfile) {
+      alert('You can only delete your own products');
+      return;
+    }
+
+    if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+      return;
+    }
+
+    setDeleting(productId);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      const response = await fetch(`${apiUrl}/products/${productId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        alert('Product deleted successfully!');
+        fetchUserAndProducts(); // Refresh the list
+      } else {
+        const data = await response.json();
+        alert(data.message || 'Failed to delete product');
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!isOwnProfile) {
+      alert('You can only delete your own account');
+      return;
+    }
+
+    setDeletingAccount(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      const response = await fetch(`${apiUrl}/users/${params.id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        alert('Your account has been deleted successfully.');
+        await signOut({ redirect: false });
+        router.push('/login');
+      } else {
+        const data = await response.json();
+        alert(data.message || 'Failed to delete account');
+      }
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setDeletingAccount(false);
+      setShowDeleteAccountModal(false);
+    }
+  };
+
+  const handleMarkAsSold = async (productId) => {
+    if (!isOwnProfile) {
+      alert('You can only mark your own products as sold');
+      return;
+    }
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      const response = await fetch(`${apiUrl}/products/${productId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isSold: true }),
+      });
+
+      if (response.ok) {
+        alert('Product marked as sold!');
+        fetchUserAndProducts(); // Refresh the list
+      } else {
+        const data = await response.json();
+        alert(data.message || 'Failed to update product');
+      }
+    } catch (error) {
+      console.error('Error updating product:', error);
+      alert('An error occurred. Please try again.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex-grow flex items-center justify-center bg-gray-50">
@@ -102,26 +201,71 @@ export default function UserProfile() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* User Header */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-          <div className="flex flex-col md:flex-row items-center md:items-start">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-4xl font-bold mb-4 md:mb-0 md:mr-6">
-              {user.name?.charAt(0).toUpperCase() || user.username?.charAt(0).toUpperCase() || 'U'}
+          <div className="flex flex-col md:flex-row items-center md:items-start justify-between">
+            <div className="flex flex-col md:flex-row items-center md:items-start">
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-4xl font-bold mb-4 md:mb-0 md:mr-6">
+                {user.name?.charAt(0).toUpperCase() || user.username?.charAt(0).toUpperCase() || 'U'}
+              </div>
+              <div className="text-center md:text-left">
+                <h1 className="text-3xl font-bold text-gray-900">{user.name || user.username}</h1>
+                <p className="text-gray-600 mt-1">@{user.username}</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Member since {new Date(user.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                </p>
+              </div>
             </div>
-            <div className="text-center md:text-left">
-              <h1 className="text-3xl font-bold text-gray-900">{user.name || user.username}</h1>
-              <p className="text-gray-600 mt-1">@{user.username}</p>
-              <p className="text-sm text-gray-500 mt-2">
-                Member since {new Date(user.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-              </p>
-            </div>
+            
+            {/* Delete Account Button - Only visible for own profile */}
+            {isOwnProfile && (
+              <button
+                onClick={() => setShowDeleteAccountModal(true)}
+                className="mt-4 md:mt-0 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2"
+              >
+                <span>🗑️</span>
+                Delete Account
+              </button>
+            )}
           </div>
         </div>
+
+        {/* Delete Account Modal */}
+        {showDeleteAccountModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+              <div className="text-center mb-6">
+                <div className="text-6xl mb-4">⚠️</div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Delete Account</h3>
+                <p className="text-gray-600">
+                  This action cannot be undone. All your products and data will be permanently deleted.
+                </p>
+              </div>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowDeleteAccountModal(false)}
+                  disabled={deletingAccount}
+                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deletingAccount}
+                  className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                >
+                  {deletingAccount ? 'Deleting...' : 'Delete Forever'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-xl p-6 shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Products Listed</p>
+                <p className="text-gray-600 text-sm">Total Products</p>
                 <p className="text-3xl font-bold text-blue-600">{products.length}</p>
               </div>
               <div className="text-4xl">📦</div>
@@ -130,21 +274,23 @@ export default function UserProfile() {
           <div className="bg-white rounded-xl p-6 shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Total Value</p>
+                <p className="text-gray-600 text-sm">Active Listings</p>
                 <p className="text-3xl font-bold text-green-600">
-                  ${products.reduce((sum, p) => sum + (p.price || 0), 0).toFixed(2)}
+                  {products.filter(p => !p.isSold).length}
                 </p>
               </div>
-              <div className="text-4xl">💰</div>
+              <div className="text-4xl">🏷️</div>
             </div>
           </div>
           <div className="bg-white rounded-xl p-6 shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Active Listings</p>
-                <p className="text-3xl font-bold text-purple-600">{products.length}</p>
+                <p className="text-gray-600 text-sm">Sold Items</p>
+                <p className="text-3xl font-bold text-purple-600">
+                  {products.filter(p => p.isSold).length}
+                </p>
               </div>
-              <div className="text-4xl">🏷️</div>
+              <div className="text-4xl">✅</div>
             </div>
           </div>
         </div>
@@ -161,60 +307,108 @@ export default function UserProfile() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((product) => (
-                <Link
+                <div
                   key={product._id}
-                  href={`/products/${product._id}`}
-                  className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:shadow-xl hover:border-blue-300 transition-all duration-300 transform hover:-translate-y-1"
+                  className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:shadow-xl hover:border-blue-300 transition-all duration-300"
                 >
                   {/* Product Image */}
-                  <div className="relative h-48 bg-gray-100">
-                    <Image
-                      src={
-                        Array.isArray(product.imageUrl) && product.imageUrl.length > 0
-                          ? product.imageUrl[0]
-                          : product.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image'
-                      }
-                      alt={product.productName}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute top-2 right-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getConditionBadgeColor(product.condition)}`}>
-                        {formatCondition(product.condition)}
-                      </span>
+                  <Link href={`/products/${product._id}`}>
+                    <div className="relative h-48 bg-gray-100">
+                      <Image
+                        src={
+                          Array.isArray(product.imageUrl) && product.imageUrl.length > 0
+                            ? product.imageUrl[0]
+                            : product.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image'
+                        }
+                        alt={product.productName}
+                        fill
+                        className={`object-cover ${product.isSold ? 'opacity-50' : ''}`}
+                      />
+                      
+                      {/* Sold Overlay Badge */}
+                      {product.isSold && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+                          <div className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold text-xl transform rotate-12">
+                            SOLD
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="absolute top-2 right-2">
+                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getConditionBadgeColor(product.condition)}`}>
+                          {formatCondition(product.condition)}
+                        </span>
+                      </div>
+                      <div className="absolute top-2 left-2">
+                        <span className="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 capitalize">
+                          {product.category}
+                        </span>
+                      </div>
                     </div>
-                    <div className="absolute top-2 left-2">
-                      <span className="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 capitalize">
-                        {product.category}
-                      </span>
-                    </div>
-                  </div>
+                  </Link>
 
                   {/* Product Details */}
                   <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-blue-600 transition truncate">
-                      {product.productName}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                      {product.description}
-                    </p>
-
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="text-2xl font-bold text-blue-600">
-                        ${product.price.toFixed(2)}
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        Year: {product.year}
-                      </div>
-                    </div>
-
-                    <div className="pt-3 border-t border-gray-200">
-                      <p className="text-xs text-gray-500">
-                        Listed {new Date(product.createdAt).toLocaleDateString()}
+                    <Link href={`/products/${product._id}`}>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-blue-600 transition truncate">
+                        {product.productName}
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                        {product.description}
                       </p>
-                    </div>
+
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="text-2xl font-bold text-blue-600">
+                          ${product.price.toFixed(2)}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          Year: {product.year}
+                        </div>
+                      </div>
+
+                      <div className="pt-3 border-t border-gray-200">
+                        <p className="text-xs text-gray-500">
+                          Listed {new Date(product.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </Link>
+                    
+                    {/* Action Buttons - Only visible for own profile */}
+                    {isOwnProfile && (
+                      <div className="mt-4 pt-3 border-t border-gray-200 flex gap-2">
+                        {!product.isSold && (
+                          <>
+                            <Link
+                              href={`/products/${product._id}/edit`}
+                              className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition text-center"
+                            >
+                              ✏️ Edit
+                            </Link>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleMarkAsSold(product._id);
+                              }}
+                              className="flex-1 px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition"
+                            >
+                              ✅ Mark Sold
+                            </button>
+                          </>
+                        )}
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleDeleteProduct(product._id);
+                          }}
+                          disabled={deleting === product._id}
+                          className="flex-1 px-3 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                        >
+                          {deleting === product._id ? '...' : '🗑️ Delete'}
+                        </button>
+                      </div>
+                    )}
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           )}
