@@ -67,7 +67,7 @@ export default function ProductDetail() {
 
       if (response.ok) {
         alert('Order created successfully! Check your profile to manage orders.');
-        router.push(`/${session.user.id}`);
+        router.push(`/users/${session.user.id}`);
       } else {
         alert(data.message || 'Failed to create order');
       }
@@ -114,7 +114,7 @@ export default function ProductDetail() {
           <div className="text-6xl mb-4">😕</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
           <p className="text-gray-600 mb-6">
-            The product you're looking for doesn't exist or has been removed.
+            The product you&apos;re looking for doesn&apos;t exist or has been removed.
           </p>
           <Link
             href="/"
@@ -282,7 +282,7 @@ export default function ProductDetail() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </Link>
-                  <p className="mt-2 text-xs text-gray-500">Click to view seller's profile and listings</p>
+                  <p className="mt-2 text-xs text-gray-500">Click to view seller&apos;s profile and listings</p>
                 </div>
               )}
 
@@ -368,15 +368,16 @@ export default function ProductDetail() {
           
           <div className="relative w-full h-full flex flex-col items-center justify-center" onClick={(e) => e.stopPropagation()}>
             {/* Main Image */}
-            <div className="relative w-full max-w-5xl max-h-[80vh]">
-              <img
+            <div className="relative w-full max-w-5xl h-[80vh]">
+              <Image
                 src={
                   Array.isArray(product.imageUrl) && product.imageUrl.length > 0
                     ? product.imageUrl[selectedImageIndex]
                     : product.imageUrl || 'https://via.placeholder.com/800x800?text=No+Image'
                 }
                 alt={product.productName}
-                className="w-full h-full object-contain rounded-lg"
+                fill
+                className="object-contain rounded-lg"
               />
             </div>
 

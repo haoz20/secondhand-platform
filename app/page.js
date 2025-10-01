@@ -86,7 +86,7 @@ export default function Home() {
       <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Welcome to SecondHand Marketplace
+            Welcome to YaungWel
           </h1>
           <p className="text-xl md:text-2xl text-blue-100">
             Buy and sell pre-owned items with ease

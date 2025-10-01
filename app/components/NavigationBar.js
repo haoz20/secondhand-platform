@@ -13,7 +13,7 @@ export default function NavigationBar() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="text-2xl font-bold text-blue-600">
-              🛒 SecondHand
+              YaungWel
             </Link>
           </div>
 

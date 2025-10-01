@@ -198,7 +198,7 @@ export default function UserProfile() {
           <div className="text-6xl mb-4">😕</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">User Not Found</h2>
           <p className="text-gray-600 mb-6">
-            The user profile you're looking for doesn't exist.
+            The user profile you&apos;re looking for doesn&apos;t exist.
           </p>
           <Link
             href="/"
@@ -489,7 +489,7 @@ export default function UserProfile() {
             {buyOrders.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">🛒</div>
-                <p className="text-gray-500 text-lg">You haven't purchased any products yet.</p>
+                <p className="text-gray-500 text-lg">You haven&apos;t purchased any products yet.</p>
                 <Link
                   href="/"
                   className="mt-4 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
@@ -565,7 +565,7 @@ export default function UserProfile() {
             {sellOrders.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">💰</div>
-                <p className="text-gray-500 text-lg">You haven't sold any products yet.</p>
+                <p className="text-gray-500 text-lg">You haven&apos;t sold any products yet.</p>
               </div>
             ) : (
               <div className="space-y-4">

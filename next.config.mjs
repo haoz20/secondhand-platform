@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   basePath: "/second-hand-marketplace",
-  experimental: {
-    instrumentationHook: true,
-  },
   images: {
     remotePatterns: [
       {

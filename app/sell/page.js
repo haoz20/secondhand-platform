@@ -335,7 +335,7 @@ export default function SellItem() {
         </div>
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white rounded-xl p-6 shadow-md"><div className="text-3xl mb-3">📸</div><h3 className="font-semibold text-gray-900 mb-2">Clear Photos</h3><p className="text-sm text-gray-600">Use high-quality images that show your item clearly</p></div>
-          <div className="bg-white rounded-xl p-6 shadow-md"><div className="text-3xl mb-3">📝</div><h3 className="font-semibold text-gray-900 mb-2">Detailed Description</h3><p className="text-sm text-gray-600">Be honest and thorough about the item's condition</p></div>
+          <div className="bg-white rounded-xl p-6 shadow-md"><div className="text-3xl mb-3">📝</div><h3 className="font-semibold text-gray-900 mb-2">Detailed Description</h3><p className="text-sm text-gray-600">Be honest and thorough about the item&apos;s condition</p></div>
           <div className="bg-white rounded-xl p-6 shadow-md"><div className="text-3xl mb-3">💰</div><h3 className="font-semibold text-gray-900 mb-2">Fair Pricing</h3><p className="text-sm text-gray-600">Research similar items to set a competitive price</p></div>
         </div>
       </div>
