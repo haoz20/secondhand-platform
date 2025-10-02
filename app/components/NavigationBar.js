@@ -54,6 +54,12 @@ export default function NavigationBar() {
               </>
             ) : (
               <>
+              <Link
+                  href="/users"
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
+                >
+                  Users
+                </Link>
                 <Link
                   href="/login"
                   className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
