@@ -20,6 +20,8 @@ export default function UserProfile() {
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [activeTab, setActiveTab] = useState('products'); // 'products', 'buying', 'selling'
+  const [updatingOrderStatus, setUpdatingOrderStatus] = useState(null);
+  const [deletingOrder, setDeletingOrder] = useState(null);
 
   // Check if the current user is viewing their own profile
   const isOwnProfile = session?.user?.id === params.id;
@@ -177,6 +179,61 @@ export default function UserProfile() {
     } catch (error) {
       console.error('Error marking product as sold:', error);
       alert('Failed to mark product as sold. Please try again.');
+    }
+  };
+
+  const handleUpdateOrderStatus = async (orderId, newStatus, orderType) => {
+    if (!confirm(`Are you sure you want to ${newStatus} this order?`)) return;
+
+    setUpdatingOrderStatus(orderId);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      const response = await fetch(`${apiUrl}/orders/${orderId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to update order status');
+      }
+
+      // Refresh orders
+      await fetchOrders();
+      alert(`Order ${newStatus} successfully!`);
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert(error.message || 'Failed to update order status. Please try again.');
+    } finally {
+      setUpdatingOrderStatus(null);
+    }
+  };
+
+  const handleDeleteOrder = async (orderId) => {
+    if (!confirm('Are you sure you want to delete this cancelled order?')) return;
+
+    setDeletingOrder(orderId);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      const response = await fetch(`${apiUrl}/orders/${orderId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to delete order');
+      }
+
+      // Refresh orders
+      await fetchOrders();
+      alert('Order deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      alert(error.message || 'Failed to delete order. Please try again.');
+    } finally {
+      setDeletingOrder(null);
     }
   };
 
@@ -540,13 +597,44 @@ export default function UserProfile() {
                           {order.product?.description}
                         </p>
                         
-                        <div className="flex justify-between items-center">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                           <div className="text-2xl font-bold text-blue-600">
                             ${order.product?.price?.toFixed(2)}
                           </div>
                           <div className="text-sm text-gray-500">
                             Order Date: {new Date(order.orderDate).toLocaleDateString()}
                           </div>
+                        </div>
+
+                        {/* Buyer Actions */}
+                        <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
+                          {order.status === 'pending' && (
+                            <button
+                              onClick={() => handleUpdateOrderStatus(order._id, 'cancelled', 'buy')}
+                              disabled={updatingOrderStatus === order._id}
+                              className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                            >
+                              {updatingOrderStatus === order._id ? 'Cancelling...' : '❌ Cancel Order'}
+                            </button>
+                          )}
+                          {order.status === 'confirmed' && (
+                            <button
+                              onClick={() => handleUpdateOrderStatus(order._id, 'cancelled', 'buy')}
+                              disabled={updatingOrderStatus === order._id}
+                              className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                            >
+                              {updatingOrderStatus === order._id ? 'Cancelling...' : '❌ Cancel Order'}
+                            </button>
+                          )}
+                          {order.status === 'cancelled' && (
+                            <button
+                              onClick={() => handleDeleteOrder(order._id)}
+                              disabled={deletingOrder === order._id}
+                              className="px-4 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
+                            >
+                              {deletingOrder === order._id ? 'Deleting...' : '🗑️ Delete Order'}
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -610,13 +698,49 @@ export default function UserProfile() {
                           {order.product?.description}
                         </p>
                         
-                        <div className="flex justify-between items-center">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                           <div className="text-2xl font-bold text-green-600">
                             ${order.product?.price?.toFixed(2)}
                           </div>
                           <div className="text-sm text-gray-500">
                             Order Date: {new Date(order.orderDate).toLocaleDateString()}
                           </div>
+                        </div>
+
+                        {/* Seller Actions */}
+                        <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
+                          {order.status === 'pending' && (
+                            <>
+                              <button
+                                onClick={() => handleUpdateOrderStatus(order._id, 'confirmed', 'sell')}
+                                disabled={updatingOrderStatus === order._id}
+                                className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+                              >
+                                {updatingOrderStatus === order._id ? 'Confirming...' : '✅ Confirm Order'}
+                              </button>
+                              <button
+                                onClick={() => handleUpdateOrderStatus(order._id, 'cancelled', 'sell')}
+                                disabled={updatingOrderStatus === order._id}
+                                className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                              >
+                                {updatingOrderStatus === order._id ? 'Cancelling...' : '❌ Cancel Order'}
+                              </button>
+                            </>
+                          )}
+                          {order.status === 'cancelled' && (
+                            <button
+                              onClick={() => handleDeleteOrder(order._id)}
+                              disabled={deletingOrder === order._id}
+                              className="px-4 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
+                            >
+                              {deletingOrder === order._id ? 'Deleting...' : '🗑️ Delete Order'}
+                            </button>
+                          )}
+                          {order.status === 'confirmed' && (
+                            <div className="px-4 py-2 bg-green-50 text-green-700 text-sm rounded-lg border border-green-200">
+                              ✅ Order Confirmed - Ready for delivery
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

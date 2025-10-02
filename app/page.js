@@ -139,8 +139,18 @@ export default function Home() {
                     src={Array.isArray(product.imageUrl) ? product.imageUrl[0] : product.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image'}
                     alt={product.productName}
                     fill
-                    className="object-cover"
+                    className={`object-cover ${product.isSold ? 'opacity-50' : ''}`}
                   />
+                  
+                  {/* Sold Overlay Badge */}
+                  {product.isSold && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+                      <div className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold text-xl transform rotate-12">
+                        SOLD OUT
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="absolute top-2 right-2">
                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getConditionBadgeColor(product.condition)}`}>
                       {formatCondition(product.condition)}

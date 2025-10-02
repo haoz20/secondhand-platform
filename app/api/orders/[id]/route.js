@@ -137,6 +137,14 @@ export async function PUT(request, { params }) {
                 { status: 400 }
             );
         }
+
+        // If cancelling the order, make the product available again
+        if (status === 'cancelled') {
+            await Product.findByIdAndUpdate(
+                order.product._id,
+                { isSold: false }
+            );
+        }
         
         // Update the order
         const updatedOrder = await Order.findByIdAndUpdate(
@@ -191,20 +199,21 @@ export async function DELETE(request, { params }) {
             );
         }
         
-        // Check authorization (only buyer can delete their orders)
+        // Check authorization (both buyer and seller can delete cancelled orders)
         const isBuyer = order.buyer.toString() === session.user.id;
+        const isSeller = order.product.seller.toString() === session.user.id;
         
-        if (!isBuyer) {
+        if (!isBuyer && !isSeller) {
             return Response.json(
-                { message: 'Only the buyer can delete their order.' },
+                { message: 'You are not authorized to delete this order.' },
                 { status: 403 }
             );
         }
         
-        // Only allow deletion if order is pending
-        if (order.status !== 'pending') {
+        // Allow deletion if order is cancelled
+        if (order.status !== 'cancelled') {
             return Response.json(
-                { message: 'Only pending orders can be deleted.' },
+                { message: 'Only cancelled orders can be deleted.' },
                 { status: 400 }
             );
         }
