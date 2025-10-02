@@ -175,7 +175,7 @@ export default function Home() {
                   {/* Price and View Details */}
                   <div className="flex items-center justify-between">
                     <div className="text-2xl font-bold text-blue-600">
-                      ${product.price.toFixed(2)}
+                      ฿{product.price.toFixed(2)}
                     </div>
                     <div className="px-4 py-2 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition">
                       View Details
