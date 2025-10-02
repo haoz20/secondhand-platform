@@ -293,7 +293,6 @@ export default function UserProfile() {
                 onClick={() => setShowDeleteAccountModal(true)}
                 className="mt-4 md:mt-0 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2"
               >
-                <span>🗑️</span>
                 Delete Account
               </button>
             )}
@@ -379,7 +378,7 @@ export default function UserProfile() {
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                📦 My Products ({products.length})
+                My Products ({products.length})
               </button>
               <button
                 onClick={() => setActiveTab('buying')}
@@ -389,7 +388,7 @@ export default function UserProfile() {
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                🛒 Buying Orders ({buyOrders.length})
+                Buying Orders ({buyOrders.length})
               </button>
               <button
                 onClick={() => setActiveTab('selling')}
@@ -399,7 +398,7 @@ export default function UserProfile() {
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                💰 Selling Orders ({sellOrders.length})
+                Selling Orders ({sellOrders.length})
               </button>
             </div>
           </div>
@@ -505,7 +504,7 @@ export default function UserProfile() {
                                 href={`/products/${product._id}/edit`}
                                 className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition text-center"
                               >
-                                ✏️ Edit
+                                Edit
                               </Link>
                               <button
                                 onClick={(e) => {
@@ -514,7 +513,7 @@ export default function UserProfile() {
                                 }}
                                 className="flex-1 px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition"
                               >
-                                ✅ Mark Sold
+                                Mark Sold
                               </button>
                             </>
                           )}
@@ -526,7 +525,7 @@ export default function UserProfile() {
                             disabled={deleting === product._id}
                             className="flex-1 px-3 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
                           >
-                            {deleting === product._id ? '...' : '🗑️ Delete'}
+                            {deleting === product._id ? '...' : 'Delete'}
                           </button>
                         </div>
                       )}
