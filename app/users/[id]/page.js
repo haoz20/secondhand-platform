@@ -20,6 +20,20 @@ export default function UserProfile() {
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [activeTab, setActiveTab] = useState('products'); // 'products', 'buying', 'selling'
+  const [updatingOrderStatus, setUpdatingOrderStatus] = useState(null);
+  const [deletingOrder, setDeletingOrder] = useState(null);
+  
+  // Edit profile states
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: '',
+    username: '',
+    email: '',
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [savingProfile, setSavingProfile] = useState(false);
 
   // Check if the current user is viewing their own profile
   const isOwnProfile = session?.user?.id === params.id;
@@ -180,6 +194,144 @@ export default function UserProfile() {
     }
   };
 
+  const handleUpdateOrderStatus = async (orderId, newStatus, orderType) => {
+    if (!confirm(`Are you sure you want to ${newStatus} this order?`)) return;
+
+    setUpdatingOrderStatus(orderId);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      const response = await fetch(`${apiUrl}/orders/${orderId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to update order status');
+      }
+
+      // Refresh orders
+      await fetchOrders();
+      alert(`Order ${newStatus} successfully!`);
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert(error.message || 'Failed to update order status. Please try again.');
+    } finally {
+      setUpdatingOrderStatus(null);
+    }
+  };
+
+  const handleDeleteOrder = async (orderId) => {
+    if (!confirm('Are you sure you want to delete this cancelled order?')) return;
+
+    setDeletingOrder(orderId);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      const response = await fetch(`${apiUrl}/orders/${orderId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to delete order');
+      }
+
+      // Refresh orders
+      await fetchOrders();
+      alert('Order deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      alert(error.message || 'Failed to delete order. Please try again.');
+    } finally {
+      setDeletingOrder(null);
+    }
+  };
+
+  const handleEditProfileClick = () => {
+    setEditForm({
+      name: user.name || '',
+      username: user.username || '',
+      email: user.email || '',
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    });
+    setIsEditingProfile(true);
+  };
+
+  const handleSaveProfile = async () => {
+    // Validation
+    if (!editForm.name.trim()) {
+      alert('Name is required');
+      return;
+    }
+    if (!editForm.username.trim()) {
+      alert('Username is required');
+      return;
+    }
+    if (!editForm.email.trim()) {
+      alert('Email is required');
+      return;
+    }
+    
+    // Password validation if changing password
+    if (editForm.newPassword) {
+      if (!editForm.currentPassword) {
+        alert('Current password is required to change password');
+        return;
+      }
+      if (editForm.newPassword.length < 6) {
+        alert('New password must be at least 6 characters');
+        return;
+      }
+      if (editForm.newPassword !== editForm.confirmPassword) {
+        alert('New passwords do not match');
+        return;
+      }
+    }
+
+    setSavingProfile(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      
+      const updateData = {
+        name: editForm.name.trim(),
+        username: editForm.username.trim(),
+        email: editForm.email.trim()
+      };
+
+      // Only include password fields if changing password
+      if (editForm.newPassword) {
+        updateData.currentPassword = editForm.currentPassword;
+        updateData.password = editForm.newPassword;
+      }
+
+      const response = await fetch(`${apiUrl}/users/${params.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to update profile');
+      }
+
+      // Refresh user data
+      await fetchUserAndProducts();
+      setIsEditingProfile(false);
+      alert('Profile updated successfully!');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert(error.message || 'Failed to update profile. Please try again.');
+    } finally {
+      setSavingProfile(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex-grow flex items-center justify-center bg-gray-50">
@@ -230,18 +382,157 @@ export default function UserProfile() {
               </div>
             </div>
             
-            {/* Delete Account Button - Only visible for own profile */}
+            {/* Action Buttons - Only visible for own profile */}
             {isOwnProfile && (
-              <button
-                onClick={() => setShowDeleteAccountModal(true)}
-                className="mt-4 md:mt-0 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2"
-              >
-                <span>🗑️</span>
-                Delete Account
-              </button>
+              <div className="flex gap-3 mt-4 md:mt-0">
+                <button
+                  onClick={handleEditProfileClick}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Edit Info
+                </button>
+                <button
+                  onClick={() => setShowDeleteAccountModal(true)}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2"
+                >
+                  Delete Account
+                </button>
+              </div>
             )}
           </div>
         </div>
+
+        {/* Edit Profile Modal */}
+        {isEditingProfile && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+            <div className="bg-white rounded-2xl p-8 max-w-2xl w-full shadow-2xl my-8 relative">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold text-gray-900">Edit Profile</h3>
+                <button
+                  onClick={() => setIsEditingProfile(false)}
+                  className="text-gray-500 hover:text-gray-700 transition p-1 rounded-lg hover:bg-gray-100"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                {/* Name */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.name}
+                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
+                    placeholder="Enter your name"
+                  />
+                </div>
+
+                {/* Username */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.username}
+                    onChange={(e) => setEditForm({ ...editForm, username: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
+                    placeholder="Enter your username"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="block text-sm text-gray-800 font-semibold mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={editForm.email}
+                    onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                    className="w-full px-4 py-3 bg-white text-gray-900 placeholder-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter your email"
+                  />
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-gray-200 pt-4">
+                  <p className="text-sm font-semibold text-gray-800 mb-4">
+                    Change Password (optional)
+                  </p>
+                </div>
+
+                {/* Current Password */}
+                <div>
+                  <label className="block text-sm text-gray-800 font-semibold mb-2">
+                    Current Password
+                  </label>
+                  <input
+                    type="password"
+                    value={editForm.currentPassword}
+                    onChange={(e) => setEditForm({ ...editForm, currentPassword: e.target.value })}
+                    className="w-full px-4 py-3 bg-white text-gray-900 placeholder-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter current password"
+                  />
+                </div>
+
+                {/* New Password */}
+                <div>
+                  <label className="block text-sm text-gray-800 font-semibold mb-2">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    value={editForm.newPassword}
+                    onChange={(e) => setEditForm({ ...editForm, newPassword: e.target.value })}
+                    className="w-full px-4 py-3 bg-white text-gray-900 placeholder-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter new password (min. 6 characters)"
+                  />
+                </div>
+
+                {/* Confirm New Password */}
+                <div>
+                  <label className="block text-sm text-gray-800 font-semibold mb-2">
+                    Confirm New Password
+                  </label>
+                  <input
+                    type="password"
+                    value={editForm.confirmPassword}
+                    onChange={(e) => setEditForm({ ...editForm, confirmPassword: e.target.value })}
+                    className="w-full px-4 py-3 bg-white text-gray-900 placeholder-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Confirm new password"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={() => setIsEditingProfile(false)}
+                  disabled={savingProfile}
+                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveProfile}
+                  disabled={savingProfile}
+                  className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                >
+                  {savingProfile ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Delete Account Modal */}
         {showDeleteAccountModal && (
@@ -322,7 +613,7 @@ export default function UserProfile() {
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                📦 My Products ({products.length})
+                My Products ({products.length})
               </button>
               <button
                 onClick={() => setActiveTab('buying')}
@@ -332,7 +623,7 @@ export default function UserProfile() {
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                🛒 Buying Orders ({buyOrders.length})
+                Buying Orders ({buyOrders.length})
               </button>
               <button
                 onClick={() => setActiveTab('selling')}
@@ -342,7 +633,7 @@ export default function UserProfile() {
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                💰 Selling Orders ({sellOrders.length})
+                Selling Orders ({sellOrders.length})
               </button>
             </div>
           </div>
@@ -448,7 +739,7 @@ export default function UserProfile() {
                                 href={`/products/${product._id}/edit`}
                                 className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition text-center"
                               >
-                                ✏️ Edit
+                                Edit
                               </Link>
                               <button
                                 onClick={(e) => {
@@ -457,7 +748,7 @@ export default function UserProfile() {
                                 }}
                                 className="flex-1 px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition"
                               >
-                                ✅ Mark Sold
+                                Mark Sold
                               </button>
                             </>
                           )}
@@ -469,7 +760,7 @@ export default function UserProfile() {
                             disabled={deleting === product._id}
                             className="flex-1 px-3 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
                           >
-                            {deleting === product._id ? '...' : '🗑️ Delete'}
+                            {deleting === product._id ? '...' : 'Delete'}
                           </button>
                         </div>
                       )}
@@ -540,13 +831,44 @@ export default function UserProfile() {
                           {order.product?.description}
                         </p>
                         
-                        <div className="flex justify-between items-center">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                           <div className="text-2xl font-bold text-blue-600">
                             ${order.product?.price?.toFixed(2)}
                           </div>
                           <div className="text-sm text-gray-500">
                             Order Date: {new Date(order.orderDate).toLocaleDateString()}
                           </div>
+                        </div>
+
+                        {/* Buyer Actions */}
+                        <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
+                          {order.status === 'pending' && (
+                            <button
+                              onClick={() => handleUpdateOrderStatus(order._id, 'cancelled', 'buy')}
+                              disabled={updatingOrderStatus === order._id}
+                              className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                            >
+                              {updatingOrderStatus === order._id ? 'Cancelling...' : '❌ Cancel Order'}
+                            </button>
+                          )}
+                          {order.status === 'confirmed' && (
+                            <button
+                              onClick={() => handleUpdateOrderStatus(order._id, 'cancelled', 'buy')}
+                              disabled={updatingOrderStatus === order._id}
+                              className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                            >
+                              {updatingOrderStatus === order._id ? 'Cancelling...' : '❌ Cancel Order'}
+                            </button>
+                          )}
+                          {order.status === 'cancelled' && (
+                            <button
+                              onClick={() => handleDeleteOrder(order._id)}
+                              disabled={deletingOrder === order._id}
+                              className="px-4 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
+                            >
+                              {deletingOrder === order._id ? 'Deleting...' : '🗑️ Delete Order'}
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -610,13 +932,49 @@ export default function UserProfile() {
                           {order.product?.description}
                         </p>
                         
-                        <div className="flex justify-between items-center">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                           <div className="text-2xl font-bold text-green-600">
                             ${order.product?.price?.toFixed(2)}
                           </div>
                           <div className="text-sm text-gray-500">
                             Order Date: {new Date(order.orderDate).toLocaleDateString()}
                           </div>
+                        </div>
+
+                        {/* Seller Actions */}
+                        <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
+                          {order.status === 'pending' && (
+                            <>
+                              <button
+                                onClick={() => handleUpdateOrderStatus(order._id, 'confirmed', 'sell')}
+                                disabled={updatingOrderStatus === order._id}
+                                className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+                              >
+                                {updatingOrderStatus === order._id ? 'Confirming...' : '✅ Confirm Order'}
+                              </button>
+                              <button
+                                onClick={() => handleUpdateOrderStatus(order._id, 'cancelled', 'sell')}
+                                disabled={updatingOrderStatus === order._id}
+                                className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                              >
+                                {updatingOrderStatus === order._id ? 'Cancelling...' : '❌ Cancel Order'}
+                              </button>
+                            </>
+                          )}
+                          {order.status === 'cancelled' && (
+                            <button
+                              onClick={() => handleDeleteOrder(order._id)}
+                              disabled={deletingOrder === order._id}
+                              className="px-4 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
+                            >
+                              {deletingOrder === order._id ? 'Deleting...' : '🗑️ Delete Order'}
+                            </button>
+                          )}
+                          {order.status === 'confirmed' && (
+                            <div className="px-4 py-2 bg-green-50 text-green-700 text-sm rounded-lg border border-green-200">
+                              ✅ Order Confirmed - Ready for delivery
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

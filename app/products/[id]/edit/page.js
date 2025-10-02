@@ -354,7 +354,7 @@ export default function EditProduct() {
               <div className="flex flex-col items-center">
                 <label className="cursor-pointer bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-medium">
                   <input type="file" accept="image/*" multiple onChange={handleNewImageChange} className="hidden" />
-                  📷 Add More Images
+                  Add More Images
                 </label>
                 {errors.images && <p className="mt-2 text-sm text-red-600">{errors.images}</p>}
                 <p className="mt-2 text-xs text-gray-500">JPG, PNG, or GIF (Max 5MB each). First image will be the main image.</p>
@@ -397,9 +397,9 @@ export default function EditProduct() {
               </div>
             </div>
             <div>
-              <label htmlFor="price" className="block text-sm font-semibold text-gray-700 mb-2">Price (USD) *</label>
+              <label htmlFor="price" className="block text-sm font-semibold text-gray-700 mb-2">Price (THB) *</label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg font-semibold">$</span>
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg font-semibold">฿</span>
                 <input type="number" id="price" name="price" value={formData.price} onChange={handleInputChange} step="0.01" min="0" placeholder="0.00" className={`w-full pl-8 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-gray-900 bg-white ${errors.price ? 'border-red-500' : 'border-gray-300'}`} />
               </div>
               {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
@@ -407,9 +407,9 @@ export default function EditProduct() {
             <div className="border-t border-gray-200"></div>
             <div className="flex flex-col sm:flex-row gap-4">
               <button type="submit" disabled={submitting || uploading} className={`flex-1 py-4 px-6 rounded-xl font-semibold text-lg transition-all transform ${submitting || uploading ? 'bg-blue-400 text-white cursor-wait' : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-[1.02] shadow-lg hover:shadow-xl'}`}>
-                {uploading ? '📤 Uploading Images...' : submitting ? '💾 Saving Changes...' : '✨ Update Product'}
+                {uploading ? 'Uploading Images...' : submitting ? 'Saving Changes...' : 'Update Product'}
               </button>
-              <button type="button" onClick={() => router.push('/profile')} disabled={submitting || uploading} className="flex-1 py-4 px-6 rounded-xl font-semibold text-lg border-2 border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed">Cancel</button>
+              <button type="button" onClick={() => router.push(`/users/${session.user.id}`)} disabled={submitting || uploading} className="flex-1 py-4 px-6 rounded-xl font-semibold text-lg border-2 border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed">Cancel</button>
             </div>
           </form>
         </div>

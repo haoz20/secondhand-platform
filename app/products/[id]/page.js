@@ -141,14 +141,6 @@ export default function ProductDetail() {
             <li>
               <span className="mx-2">/</span>
             </li>
-            <li>
-              <span className="capitalize hover:text-blue-600 transition cursor-pointer">
-                {product.category}
-              </span>
-            </li>
-            <li>
-              <span className="mx-2">/</span>
-            </li>
             <li className="text-gray-900 font-medium truncate max-w-xs">
               {product.productName}
             </li>
@@ -176,7 +168,7 @@ export default function ProductDetail() {
                   priority
                 />
                 <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-lg text-sm">
-                  🔍 Click to enlarge
+                  Click to enlarge
                 </div>
               </div>
               
@@ -310,7 +302,7 @@ export default function ProductDetail() {
                   ) : !session ? (
                     'Login to Buy'
                   ) : (
-                    '🛒 Buy Now'
+                    'Buy Now'
                   )}
                 </button>
                 
@@ -322,31 +314,6 @@ export default function ProductDetail() {
                 </Link>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Additional Features Section */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
-            <div className="text-3xl mb-3">🔒</div>
-            <h3 className="font-semibold text-gray-900 mb-2">Secure Purchase</h3>
-            <p className="text-sm text-gray-600">
-              All transactions are protected and secure
-            </p>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
-            <div className="text-3xl mb-3">✅</div>
-            <h3 className="font-semibold text-gray-900 mb-2">Quality Checked</h3>
-            <p className="text-sm text-gray-600">
-              Items verified before listing
-            </p>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
-            <div className="text-3xl mb-3">💬</div>
-            <h3 className="font-semibold text-gray-900 mb-2">Direct Communication</h3>
-            <p className="text-sm text-gray-600">
-              Contact seller through our platform
-            </p>
           </div>
         </div>
       </div>

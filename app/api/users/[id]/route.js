@@ -5,6 +5,7 @@ import dbConnect from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import bcrypt from 'bcryptjs';
+import crypto from "crypto";
 
 // GET - Get user profile by ID
 export async function GET(request, { params }) {
@@ -188,27 +189,89 @@ export async function DELETE(request, { params }) {
         */
         
         // Option 2: Clean up related data (recommended)
+        // Get all user's products to delete their images and orders
+        const userProducts = await Product.find({ seller: id });
+        const productIds = userProducts.map(p => p._id);
+        
+        // Delete all orders related to user's products
+        await Order.deleteMany({ product: { $in: productIds } });
+        
+        // Delete all orders where user is a buyer
+        await Order.deleteMany({ buyer: id });
+        
+        // Delete images from Cloudinary
+        const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+        const apiKey = process.env.CLOUDINARY_API_KEY;
+        const apiSecret = process.env.CLOUDINARY_API_SECRET;
+        
+        for (const product of userProducts) {
+            if (product.imageUrl && product.imageUrl.length > 0) {
+                try {
+                    const cloudinaryUrls = Array.isArray(product.imageUrl) ? product.imageUrl : [product.imageUrl];
+                    
+                    for (const url of cloudinaryUrls) {
+                        if (url && url.includes('cloudinary.com')) {
+                            // Extract public_id from URL
+                            const urlParts = url.split('/upload/');
+                            if (urlParts.length > 1) {
+                                const pathAfterUpload = urlParts[1];
+                                const pathWithoutVersion = pathAfterUpload.replace(/^v\d+\//, '');
+                                const publicId = pathWithoutVersion.substring(0, pathWithoutVersion.lastIndexOf('.')) || pathWithoutVersion;
+                                
+                                console.log(`Attempting to delete Cloudinary image: ${publicId}`);
+                                
+                                // Generate timestamp for signature
+                                const timestamp = Math.round(new Date().getTime() / 1000);
+                                
+                                // Create signature
+                                const stringToSign = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+                                const signature = crypto.createHash('sha1').update(stringToSign).digest('hex');
+                                
+                                // Call Cloudinary destroy API
+                                const formData = new URLSearchParams();
+                                formData.append('public_id', publicId);
+                                formData.append('timestamp', timestamp.toString());
+                                formData.append('api_key', apiKey);
+                                formData.append('signature', signature);
+                                
+                                const cloudinaryResponse = await fetch(
+                                    `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`,
+                                    {
+                                        method: 'POST',
+                                        body: formData,
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                        },
+                                    }
+                                );
+                                
+                                const result = await cloudinaryResponse.json();
+                                
+                                if (result.result === 'ok') {
+                                    console.log(`Successfully deleted Cloudinary image: ${publicId}`);
+                                } else {
+                                    console.log(`Cloudinary deletion result for ${publicId}:`, result);
+                                }
+                            }
+                        }
+                    }
+                } catch (cloudinaryError) {
+                    console.error(`Error deleting Cloudinary images for product ${product._id}:`, cloudinaryError);
+                    // Continue with deletion even if Cloudinary fails
+                }
+            }
+        }
+        
         // Delete user's products
         await Product.deleteMany({ seller: id });
-        
-        // Update orders to mark user as deleted (preserve order history)
-        await Order.updateMany(
-            { $or: [{ buyer: id }, { seller: id }] },
-            { 
-                $set: { 
-                    'buyer.deleted': true,
-                    'seller.deleted': true 
-                } 
-            }
-        );
         
         // Delete the user account
         await User.findByIdAndDelete(id);
         
         return Response.json({
-            message: 'Account deleted successfully.',
-            deletedProducts: activeProducts,
-            affectedOrders: activeOrders
+            message: 'Account and all related data deleted successfully.',
+            deletedProducts: userProducts.length,
+            note: 'All products, orders, and associated data have been removed.'
         });
     } catch (error) {
         console.error('Error deleting user:', error);
