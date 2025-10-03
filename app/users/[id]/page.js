@@ -934,7 +934,7 @@ export default function UserProfile() {
                         
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                           <div className="text-2xl font-bold text-green-600">
-                            ${order.product?.price?.toFixed(2)}
+                            ฿{order.product?.price?.toFixed(2)}
                           </div>
                           <div className="text-sm text-gray-500">
                             Order Date: {new Date(order.orderDate).toLocaleDateString()}

@@ -241,7 +241,7 @@ export default function ProductDetail() {
               <div className="mb-8">
                 <div className="text-gray-600 text-sm mb-2">Price</div>
                 <div className="text-5xl font-bold text-blue-600">
-                  ${product.price.toFixed(2)}
+                  ฿{product.price.toFixed(2)}
                 </div>
               </div>
 
