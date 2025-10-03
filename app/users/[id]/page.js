@@ -716,7 +716,7 @@ export default function UserProfile() {
 
                         <div className="flex items-center justify-between mb-2">
                           <div className="text-2xl font-bold text-blue-600">
-                            ${product.price.toFixed(2)}
+                            ฿{product.price.toFixed(2)}
                           </div>
                           <div className="text-xs text-gray-500">
                             Year: {product.year}
@@ -833,7 +833,7 @@ export default function UserProfile() {
                         
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                           <div className="text-2xl font-bold text-blue-600">
-                            ${order.product?.price?.toFixed(2)}
+                            ฿{order.product?.price?.toFixed(2)}
                           </div>
                           <div className="text-sm text-gray-500">
                             Order Date: {new Date(order.orderDate).toLocaleDateString()}
@@ -848,7 +848,7 @@ export default function UserProfile() {
                               disabled={updatingOrderStatus === order._id}
                               className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
                             >
-                              {updatingOrderStatus === order._id ? 'Cancelling...' : '❌ Cancel Order'}
+                              {updatingOrderStatus === order._id ? 'Cancelling...' : 'Cancel Order'}
                             </button>
                           )}
                           {order.status === 'confirmed' && (
@@ -857,7 +857,7 @@ export default function UserProfile() {
                               disabled={updatingOrderStatus === order._id}
                               className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
                             >
-                              {updatingOrderStatus === order._id ? 'Cancelling...' : '❌ Cancel Order'}
+                              {updatingOrderStatus === order._id ? 'Cancelling...' : 'Cancel Order'}
                             </button>
                           )}
                           {order.status === 'cancelled' && (
@@ -866,7 +866,7 @@ export default function UserProfile() {
                               disabled={deletingOrder === order._id}
                               className="px-4 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
                             >
-                              {deletingOrder === order._id ? 'Deleting...' : '🗑️ Delete Order'}
+                              {deletingOrder === order._id ? 'Deleting...' : 'Delete Order'}
                             </button>
                           )}
                         </div>
@@ -950,14 +950,14 @@ export default function UserProfile() {
                                 disabled={updatingOrderStatus === order._id}
                                 className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition disabled:opacity-50"
                               >
-                                {updatingOrderStatus === order._id ? 'Confirming...' : '✅ Confirm Order'}
+                                {updatingOrderStatus === order._id ? 'Confirming...' : 'Confirm Order'}
                               </button>
                               <button
                                 onClick={() => handleUpdateOrderStatus(order._id, 'cancelled', 'sell')}
                                 disabled={updatingOrderStatus === order._id}
                                 className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
                               >
-                                {updatingOrderStatus === order._id ? 'Cancelling...' : '❌ Cancel Order'}
+                                {updatingOrderStatus === order._id ? 'Cancelling...' : 'Cancel Order'}
                               </button>
                             </>
                           )}
@@ -967,12 +967,12 @@ export default function UserProfile() {
                               disabled={deletingOrder === order._id}
                               className="px-4 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
                             >
-                              {deletingOrder === order._id ? 'Deleting...' : '🗑️ Delete Order'}
+                              {deletingOrder === order._id ? 'Deleting...' : 'Delete Order'}
                             </button>
                           )}
                           {order.status === 'confirmed' && (
                             <div className="px-4 py-2 bg-green-50 text-green-700 text-sm rounded-lg border border-green-200">
-                              ✅ Order Confirmed - Ready for delivery
+                              Order Confirmed - Ready for delivery
                             </div>
                           )}
                         </div>
