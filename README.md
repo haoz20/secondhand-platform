@@ -140,4 +140,4 @@ Our system fully supports **Create, Read, Update, and Delete** operations across
 ![Azure DevOps](https://img.shields.io/badge/Azure%20DevOps-0078D7?logo=azure-devops&logoColor=white)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-6B5B9A?logo=cloudinary&logoColor=white)
 
-copyright © 1/2025 YaungWel (WAD-Project02). All rights reserved.
+© 1/2025 YaungWel (WAD-Project02). All rights reserved.
