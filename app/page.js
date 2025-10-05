@@ -95,7 +95,7 @@ export default function Home() {
       </div>
 
       {/* Products Section */}
-      <div className="flex-grow bg-gradient-to-br from-[#14B8A6]/10 via-white to-[#FFDAB9]/20">
+      <div className="flex-grow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-[#292524]">Available Products</h2>

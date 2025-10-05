@@ -7,7 +7,7 @@ export default function NotFound() {
   const router = useRouter();
 
   return (
-    <div className="flex-grow flex items-center justify-center bg-gradient-to-br from-[#14B8A6]/10 via-white to-[#FFDAB9]/20 px-4">
+    <div className="flex-grow flex items-center justify-center px-4">
       <div className="text-center max-w-2xl">
         {/* 404 Number with Gradient */}
         <div className="mb-8">

@@ -334,7 +334,7 @@ export default function UserProfile() {
 
   if (loading) {
     return (
-      <div className="flex-grow flex items-center justify-center bg-[#F5F5F4]">
+      <div className="flex-grow flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#14B8A6] mx-auto mb-4"></div>
           <p className="text-stone-600">Loading profile...</p>
@@ -345,7 +345,7 @@ export default function UserProfile() {
 
   if (error || !user) {
     return (
-      <div className="flex-grow flex items-center justify-center bg-gradient-to-br from-[#14B8A6]/10 via-white to-[#FFDAB9]/20">
+      <div className="flex-grow flex items-center justify-center">
         <div className="text-center max-w-md px-4">
           <div className="text-6xl mb-4">😕</div>
           <h2 className="text-2xl font-bold text-[#292524] mb-2">User Not Found</h2>
@@ -364,7 +364,7 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="flex-grow bg-gradient-to-br from-[#14B8A6]/10 via-white to-[#FFDAB9]/20">
+    <div className="flex-grow">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* User Header */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
@@ -518,14 +518,14 @@ export default function UserProfile() {
                 <button
                   onClick={() => setIsEditingProfile(false)}
                   disabled={savingProfile}
-                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
+                  className="flex-1 px-4 py-3 bg-stone-200 text-[#292524] rounded-lg hover:bg-stone-300 transition disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSaveProfile}
                   disabled={savingProfile}
-                  className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                  className="flex-1 px-4 py-3 bg-[#14B8A6] text-white rounded-lg hover:bg-[#0d9488] transition disabled:opacity-50"
                 >
                   {savingProfile ? 'Saving...' : 'Save Changes'}
                 </button>

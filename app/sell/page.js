@@ -28,7 +28,7 @@ export default function SellItem() {
 
   if (status === "loading") {
     return (
-      <div className="flex-grow flex items-center justify-center bg-gradient-to-br from-[#14B8A6]/10 via-white to-[#FFDAB9]/20">
+      <div className="flex-grow flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#14B8A6] mx-auto mb-4"></div>
           <p className="text-stone-600 text-lg">Loading...</p>
@@ -244,7 +244,7 @@ export default function SellItem() {
   }
 
   return (
-    <div className="flex-grow bg-gradient-to-br from-[#14B8A6]/10 via-white to-[#FFDAB9]/20">
+    <div className="flex-grow">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-[#292524] mb-3">List Your Item</h1>
