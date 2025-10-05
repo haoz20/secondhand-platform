@@ -286,10 +286,10 @@ export default function EditProduct() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="flex-grow flex items-center justify-center bg-gray-50">
+      <div className="flex-grow flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#14B8A6] mx-auto mb-4"></div>
+          <p className="text-stone-600 text-lg">Loading...</p>
         </div>
       </div>
     );
@@ -300,31 +300,31 @@ export default function EditProduct() {
   }
 
   return (
-    <div className="flex-grow bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="flex-grow">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">Edit Your Item</h1>
-          <p className="text-gray-600 text-lg">Update the details of your product</p>
+          <h1 className="text-4xl font-bold text-[#292524] mb-3">Edit Your Item</h1>
+          <p className="text-stone-600 text-lg">Update the details of your product</p>
         </div>
         <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10">
           <form onSubmit={handleSubmit} className="space-y-8">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">Product Images * (at least one required)</label>
+              <label className="block text-sm font-semibold text-[#292524] mb-3">Product Images * (at least one required)</label>
               
               {/* Existing Images */}
               {existingImages.length > 0 && (
                 <div>
-                  <p className="text-xs text-gray-600 mb-2">Current Images:</p>
+                  <p className="text-xs text-stone-600 mb-2">Current Images:</p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
                     {existingImages.map((url, index) => (
-                      <div key={`existing-${index}`} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 border-2 border-blue-300">
+                      <div key={`existing-${index}`} className="relative aspect-square rounded-lg overflow-hidden bg-stone-100 border-2 border-[#14B8A6]">
                         <Image src={url} alt={`Existing ${index + 1}`} fill className="object-cover" />
-                        <button type="button" onClick={() => handleRemoveExistingImage(index)} className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition">
+                        <button type="button" onClick={() => handleRemoveExistingImage(index)} className="absolute top-2 right-2 bg-gradient-to-r from-[#DC2626] to-[#b91c1c] text-white rounded-full p-1 hover:from-[#b91c1c] hover:to-[#991b1b] transition">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
-                        {index === 0 && <div className="absolute bottom-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">Main</div>}
+                        {index === 0 && <div className="absolute bottom-2 left-2 bg-[#14B8A6] text-white text-xs px-2 py-1 rounded">Main</div>}
                       </div>
                     ))}
                   </div>
@@ -334,17 +334,17 @@ export default function EditProduct() {
               {/* New Images */}
               {newImagePreviews.length > 0 && (
                 <div>
-                  <p className="text-xs text-gray-600 mb-2">New Images to Add:</p>
+                  <p className="text-xs text-stone-600 mb-2">New Images to Add:</p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
                     {newImagePreviews.map((preview, index) => (
-                      <div key={`new-${index}`} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 border-2 border-green-300">
+                      <div key={`new-${index}`} className="relative aspect-square rounded-lg overflow-hidden bg-stone-100 border-2 border-[#22C55E]">
                         <Image src={preview} alt={`New ${index + 1}`} fill className="object-cover" />
-                        <button type="button" onClick={() => removeNewImage(index)} className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition">
+                        <button type="button" onClick={() => removeNewImage(index)} className="absolute top-2 right-2 bg-gradient-to-r from-[#DC2626] to-[#b91c1c] text-white rounded-full p-1 hover:from-[#b91c1c] hover:to-[#991b1b] transition">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
-                        <div className="absolute bottom-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded">New</div>
+                        <div className="absolute bottom-2 left-2 bg-[#22C55E] text-white text-xs px-2 py-1 rounded">New</div>
                       </div>
                     ))}
                   </div>
@@ -352,64 +352,64 @@ export default function EditProduct() {
               )}
               
               <div className="flex flex-col items-center">
-                <label className="cursor-pointer bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-medium">
+                <label className="cursor-pointer bg-[#14B8A6] text-white px-6 py-3 rounded-lg hover:bg-[#0d9488] transition font-medium">
                   <input type="file" accept="image/*" multiple onChange={handleNewImageChange} className="hidden" />
                   Add More Images
                 </label>
                 {errors.images && <p className="mt-2 text-sm text-red-600">{errors.images}</p>}
-                <p className="mt-2 text-xs text-gray-500">JPG, PNG, or GIF (Max 5MB each). First image will be the main image.</p>
+                <p className="mt-2 text-xs text-stone-500">JPG, PNG, or GIF (Max 5MB each). First image will be the main image.</p>
               </div>
             </div>
-            <div className="border-t border-gray-200"></div>
+            <div className="border-t border-stone-200"></div>
             <div>
-              <label htmlFor="productName" className="block text-sm font-semibold text-gray-700 mb-2">Product Name *</label>
-              <input type="text" id="productName" name="productName" value={formData.productName} onChange={handleInputChange} placeholder="e.g., iPhone 13 Pro Max" className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-gray-900 bg-white ${errors.productName ? 'border-red-500' : 'border-gray-300'}`} />
+              <label htmlFor="productName" className="block text-sm font-semibold text-[#292524] mb-2">Product Name *</label>
+              <input type="text" id="productName" name="productName" value={formData.productName} onChange={handleInputChange} placeholder="e.g., iPhone 13 Pro Max" className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#14B8A6] focus:border-transparent transition text-[#292524] bg-white ${errors.productName ? 'border-red-500' : 'border-stone-300'}`} />
               {errors.productName && <p className="mt-1 text-sm text-red-600">{errors.productName}</p>}
             </div>
             <div>
-              <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
-              <textarea id="description" name="description" value={formData.description} onChange={handleInputChange} rows={5} placeholder="Describe your item in detail..." className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none text-gray-900 bg-white ${errors.description ? 'border-red-500' : 'border-gray-300'}`} />
+              <label htmlFor="description" className="block text-sm font-semibold text-[#292524] mb-2">Description *</label>
+              <textarea id="description" name="description" value={formData.description} onChange={handleInputChange} rows={5} placeholder="Describe your item in detail..." className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#14B8A6] focus:border-transparent transition resize-none text-[#292524] bg-white ${errors.description ? 'border-red-500' : 'border-stone-300'}`} />
               {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
-                <select id="category" name="category" value={formData.category} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-gray-900 bg-white ${errors.category ? 'border-red-500' : 'border-gray-300'}`}>
+                <label htmlFor="category" className="block text-sm font-semibold text-[#292524] mb-2">Category *</label>
+                <select id="category" name="category" value={formData.category} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#14B8A6] focus:border-transparent transition text-[#292524] bg-white ${errors.category ? 'border-red-500' : 'border-stone-300'}`}>
                   <option value="">Select category</option>
                   {PRODUCT_CATEGORIES.map((cat) => <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>)}
                 </select>
                 {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
               </div>
               <div>
-                <label htmlFor="condition" className="block text-sm font-semibold text-gray-700 mb-2">Condition *</label>
-                <select id="condition" name="condition" value={formData.condition} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-gray-900 bg-white ${errors.condition ? 'border-red-500' : 'border-gray-300'}`}>
+                <label htmlFor="condition" className="block text-sm font-semibold text-[#292524] mb-2">Condition *</label>
+                <select id="condition" name="condition" value={formData.condition} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#14B8A6] focus:border-transparent transition text-[#292524] bg-white ${errors.condition ? 'border-red-500' : 'border-stone-300'}`}>
                   <option value="">Select condition</option>
                   {Object.entries(CONDITION_LABELS).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
                 </select>
                 {errors.condition && <p className="mt-1 text-sm text-red-600">{errors.condition}</p>}
               </div>
               <div>
-                <label htmlFor="year" className="block text-sm font-semibold text-gray-700 mb-2">Year *</label>
-                <select id="year" name="year" value={formData.year} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-gray-900 bg-white ${errors.year ? 'border-red-500' : 'border-gray-300'}`}>
+                <label htmlFor="year" className="block text-sm font-semibold text-[#292524] mb-2">Year *</label>
+                <select id="year" name="year" value={formData.year} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#14B8A6] focus:border-transparent transition text-[#292524] bg-white ${errors.year ? 'border-red-500' : 'border-stone-300'}`}>
                   {yearOptions.map((year) => <option key={year} value={year}>{year}</option>)}
                 </select>
                 {errors.year && <p className="mt-1 text-sm text-red-600">{errors.year}</p>}
               </div>
             </div>
             <div>
-              <label htmlFor="price" className="block text-sm font-semibold text-gray-700 mb-2">Price (THB) *</label>
+              <label htmlFor="price" className="block text-sm font-semibold text-[#292524] mb-2">Price (THB) *</label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg font-semibold">฿</span>
-                <input type="number" id="price" name="price" value={formData.price} onChange={handleInputChange} step="0.01" min="0" placeholder="0.00" className={`w-full pl-8 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-gray-900 bg-white ${errors.price ? 'border-red-500' : 'border-gray-300'}`} />
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-stone-500 text-lg font-semibold">฿</span>
+                <input type="number" id="price" name="price" value={formData.price} onChange={handleInputChange} step="0.01" min="0" placeholder="0.00" className={`w-full pl-8 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#14B8A6] focus:border-transparent transition text-[#292524] bg-white ${errors.price ? 'border-red-500' : 'border-stone-300'}`} />
               </div>
               {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
             </div>
-            <div className="border-t border-gray-200"></div>
+            <div className="border-t border-stone-200"></div>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button type="submit" disabled={submitting || uploading} className={`flex-1 py-4 px-6 rounded-xl font-semibold text-lg transition-all transform ${submitting || uploading ? 'bg-blue-400 text-white cursor-wait' : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-[1.02] shadow-lg hover:shadow-xl'}`}>
+              <button type="submit" disabled={submitting || uploading} className={`flex-1 py-4 px-6 rounded-xl font-semibold text-lg transition-all transform ${submitting || uploading ? 'bg-[#14B8A6]/60 text-white cursor-wait' : 'bg-[#14B8A6] text-white hover:bg-[#0d9488] hover:scale-[1.02] shadow-lg hover:shadow-xl'}`}>
                 {uploading ? 'Uploading Images...' : submitting ? 'Saving Changes...' : 'Update Product'}
               </button>
-              <button type="button" onClick={() => router.push(`/users/${session.user.id}`)} disabled={submitting || uploading} className="flex-1 py-4 px-6 rounded-xl font-semibold text-lg border-2 border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed">Cancel</button>
+              <button type="button" onClick={() => router.push(`/users/${session.user.id}`)} disabled={submitting || uploading} className="flex-1 py-4 px-6 rounded-xl font-semibold text-lg border-2 border-stone-300 text-[#292524] hover:border-stone-400 hover:bg-stone-50 transition disabled:opacity-50 disabled:cursor-not-allowed">Cancel</button>
             </div>
           </form>
         </div>

@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <div className="min-h-screen flex flex-col">
             <NavigationBar />
-            <main className="flex-grow flex flex-col">
+            <main className="flex-grow flex flex-col bg-gradient-to-br from-[#B5EAEA] via-[#F4F4F2] to-[#EDF6E5]">
               {children}
             </main>
             <Footer />

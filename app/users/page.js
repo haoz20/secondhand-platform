@@ -48,16 +48,16 @@ export default function UsersPage() {
   const getRandomColor = (username) => {
     // Generate a consistent color based on username
     const colors = [
-      'bg-red-500',
-      'bg-blue-500',
-      'bg-green-500',
-      'bg-yellow-500',
-      'bg-purple-500',
-      'bg-pink-500',
-      'bg-indigo-500',
-      'bg-teal-500',
-      'bg-orange-500',
-      'bg-cyan-500'
+      'bg-[#DC2626]',
+      'bg-[#14B8A6]',
+      'bg-[#22C55E]',
+      'bg-[#FBBF24]',
+      'bg-[#8B5CF6]',
+      'bg-[#EC4899]',
+      'bg-[#6366F1]',
+      'bg-[#0d9488]',
+      'bg-[#F97316]',
+      'bg-[#06B6D4]'
     ];
     const index = username ? username.charCodeAt(0) % colors.length : 0;
     return colors[index];
@@ -66,25 +66,25 @@ export default function UsersPage() {
   return (
     <div className="flex flex-col flex-grow">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white py-16">
+      <div className="bg-gradient-to-r from-[#393E46] via-[#00ADB5] to-[#EEEEEE] text-white py-16 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">
             Community Members
           </h1>
-          <p className="text-xl md:text-2xl text-purple-100">
+          <p className="text-xl md:text-2xl text-white text-opacity-95 drop-shadow">
             Connect with buyers and sellers in our marketplace
           </p>
         </div>
       </div>
 
       {/* Users Section */}
-      <div className="flex-grow bg-gray-50">
+      <div className="flex-grow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-[#292524]">
               All Users
               {!loading && (
-                <span className="text-gray-500 text-2xl ml-2">
+                <span className="text-stone-600 text-2xl ml-2">
                   ({users.length})
                 </span>
               )}
@@ -93,11 +93,11 @@ export default function UsersPage() {
 
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <div className="text-gray-600 text-lg">Loading users...</div>
+              <div className="text-[#292524] text-lg">Loading users...</div>
             </div>
           ) : users.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">
+              <p className="text-stone-600 text-lg">
                 {session 
                   ? "No other users found yet."
                   : "No users available yet."}
@@ -121,23 +121,23 @@ export default function UsersPage() {
 
                     {/* User Info */}
                     <div className="text-center">
-                      <h3 className="text-xl font-bold text-gray-900 mb-1">
+                      <h3 className="text-xl font-bold text-[#292524] mb-1">
                         {user.name}
                       </h3>
-                      <p className="text-gray-600 text-sm mb-4">
+                      <p className="text-stone-600 text-sm mb-4">
                         @{user.username}
                       </p>
 
                       {/* View Profile Button */}
-                      <div className="mt-4 pt-4 border-t border-gray-200">
-                        <div className="inline-block px-4 py-2 rounded-lg font-medium bg-purple-600 text-white hover:bg-purple-700 transition">
+                      <div className="mt-4 pt-4 border-t border-stone-200">
+                        <div className="inline-block px-4 py-2 rounded-lg font-medium bg-[#14B8A6] text-white hover:bg-[#0d9488] transition">
                           View Profile
                         </div>
                       </div>
 
                       {/* Member Since */}
                       <div className="mt-3">
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-stone-500">
                           Member since {new Date(user.createdAt).toLocaleDateString()}
                         </p>
                       </div>
