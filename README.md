@@ -1,61 +1,105 @@
-# Yaung Wel
+# YaungWel
+> **YaungWel** is a modern, full-stack secondhand marketplace platform that connects buyers and sellers in a seamless peer-to-peer commerce experience. Built with Next.js and powered by MongoDB, the platform enables users to list, browse, and purchase pre-owned items across multiple categories including Electronics, Clothing, Books, Furniture, and more.
 
-> A modern, full-stack secondhand marketplace platform built with Next.js that enables users to buy and sell pre-owned items seamlessly. The platform provides a comprehensive solution for peer-to-peer commerce with a focus on user experience and security.
+## Team Members and Contributors
 
-## Team Members
-
-- Swan Htet Aung ([@haoz20](https://github.com/haoz20)) — [Repo](https://github.com/haoz20/haoz20.github.io)
-- Thiri Htet ([@Thiri-htet04](https://github.com/Thiri-htet04)) — [Repo](https://github.com/Thiri-htet04/Thiri-htet04.github.io)
-- Kaung Myat San ([@Kaungms](https://github.com/Kaungms)) - [Repo](https://github.com/Kaungms/Kaungms.github.io)
+<div align="center">
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/haoz20">
+        <img src="https://github.com/haoz20.png" width="80px;" alt="Swan Htet Aung" style="border-radius: 50%;"/>
+        <br />
+        <sub><b style="color: black;">Swan Htet Aung</b></sub>
+      </a>
+      <br />
+      <a href="https://github.com/haoz20/haoz20.github.io">Repo</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Thiri-htet04">
+        <img src="https://github.com/Thiri-htet04.png" width="80px;" alt="Thiri Htet" style="border-radius: 50%;"/>
+        <br />
+        <sub><b style="color: black;">Thiri Htet</b></sub>
+      </a>
+      <br />
+      <a href="https://github.com/Thiri-htet04/Thiri-htet04.github.io">Repo</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Kaungms">
+        <img src="https://github.com/Kaungms.png" width="80px;" alt="Kaung Myat San" style="border-radius: 50%;"/>
+        <br />
+        <sub><b style="color: black;">Kaung Myat San</b></sub>
+      </a>
+      <br />
+      <a href="https://github.com/Kaungms/Kaungms.github.io">Repo</a>
+    </td>
+  </tr>
+</table>
+</div>
 
 ## Project Description
 
-### Key Features
 
-#### 🔐 **User Management**
 
-Manage your account securely and interact with other users.
-- Register and log in using **NextAuth.js**
-- Edit and update user profiles
-- Manage passwords and account security
-- Discover and browse community members
+The platform features comprehensive user authentication via NextAuth.js and integrated media handling through Cloudinary. With a responsive design styled using Tailwind CSS, Yaung Wel provides an intuitive and modern interface for both desktop and mobile users.
 
-#### 📦 **Product Management**
+### Key Highlights
+- 🛒 **Full marketplace functionality** with product listings, user profiles, and order management
+- 🔐 **Secure authentication** and password hashing for user safety
+- 📸 **Multi-image uploads** with Cloudinary integration for optimized delivery
+- 📱 **Responsive design** that works seamlessly across all devices
+- ⚙️ **Full CRUD operations** for Users, Products, and Orders
 
-Easily create and manage listings for secondhand items.
-- Upload multiple product images  
-- Categorize items (Electronics, Clothing, Books, Furniture, Sports, Toys, Automotive, Home, Other) 
-- Set pricing based on condition (New, Like New, Good, Fair, Poor)  
-- Edit, delete, or mark items as sold  
+---
 
-#### 🛒 **Order System**
+## Screenshots
 
-Handle transactions between buyers and sellers efficiently.
-- Buyers can place orders for available products  
-- Sellers can confirm, cancel, or mark orders as completed  
-- Order status tracking (Pending → Confirmed → Cancelled)  
-- View transaction history in user dashboard 
+### CRUD for Product
 
-#### 🖼️ **Media Management**
+#### Product Listing Page
+![Product Read](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/product/read_product.png)
 
-- Upload and preview multiple product images  
-- **Cloudinary** integration for optimized image storage and delivery  
-- Responsive image display with zoom and lightbox support  
+#### Product Create Page
+![Product Create](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/product/create_product.png)
 
-#### 💻 **Modern User Interface**
+#### Product Update Page
+![Product Update](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/product/edit_product.png)
 
-- Fully responsive design for mobile and desktop  
-- Styled with **Tailwind CSS** for a clean and modern layout  
-- Smooth navigation with loading states and error handling  
-- Interactive product galleries and intuitive browsing  
-- Loading states and error handling for better UX
+#### Product Delete Page
+![Product Delete](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/product/delete_product.png)
 
-#### 🔍 **Browse & Discover**
+### CRUD for User
 
-- Filter, sort, and search products easily  
-- Homepage showcase of featured items  
-- Individual product detail pages with user info and listing stats  
-- View all listings from a specific user  
+#### User Create Page
+![User Create](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/user/create_account.png)
+
+#### User Listing Page
+![User Read](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/user/read_users.png)
+
+#### User Editing Page
+![User Edit](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/user/edit_user.png)
+
+#### User Delete Page
+![User Delete](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/user/delete_user.png)
+
+### CRUD for Order
+
+#### Order Create Page
+![Order Create](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/order/creaet_order.png)
+![Order Create Success](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/order/create_order_successfully.png)
+
+#### Order Listing Page
+![Order Read - Buy](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/order/read_order-buy.png)
+---
+![Order Read - Sell](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/order/read_order-sell.png)
+
+#### Order Update Page
+![Order Update](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/order/edit_order.png)
+
+#### Order Delete Page
+![Order Delete](https://raw.githubusercontent.com/haoz20/secondhand-platform/428f53f6c709fe5cc986573224962e24a24b06c2/public/screenshots/order/delete_order.png)
+
+---
 
 ## ⚙️ CRUD Functionalities
 
@@ -82,36 +126,18 @@ Our system fully supports **Create, Read, Update, and Delete** operations across
 |------------|--------------|
 | **Create** | Buyers can place orders for available products. |
 | **Read** | Both buyers and sellers can view order details and history. |
-| **Update** | Order status can be updated (Pending → Confirmed → Completed). |
+| **Update** | Order status can be updated (Pending , Confirmed, Cancelled). |
 | **Delete** | Cancelled orders are removed from active lists. |
 
+---
 
 ## Tech Stack
 
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-000?logo=next.js&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?logo=mongodb&logoColor=white)
-![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white)
 ![Azure DevOps](https://img.shields.io/badge/Azure%20DevOps-0078D7?logo=azure-devops&logoColor=white)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-6B5B9A?logo=cloudinary&logoColor=white)
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+copyright © 1/2025 YaungWel (WAD-Project02). All rights reserved.
