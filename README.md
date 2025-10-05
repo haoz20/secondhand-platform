@@ -8,30 +8,30 @@
   <tr>
     <td align="center">
       <a href="https://github.com/haoz20">
-        <img src="https://github.com/haoz20.png" width="80px;" alt="Swan Htet Aung" style="border-radius: 50%;"/>
+        <img src="https://github.com/haoz20.png?size=100" width="100" height="100" style="border-radius:50%;" alt="Swan Htet Aung"/>
         <br />
-        <sub><b style="color: black;">Swan Htet Aung</b></sub>
+        <sub><b>Swan Htet Aung</b></sub>
       </a>
       <br />
-      <a href="https://github.com/haoz20/haoz20.github.io">Repo</a>
+      <a href="https://github.com/haoz20/haoz20.github.io">📁 Repo</a>
     </td>
     <td align="center">
       <a href="https://github.com/Thiri-htet04">
-        <img src="https://github.com/Thiri-htet04.png" width="80px;" alt="Thiri Htet" style="border-radius: 50%;"/>
+        <img src="https://github.com/Thiri-htet04.png?size=100" width="100" height="100" style="border-radius:50%;" alt="Thiri Htet"/>
         <br />
-        <sub><b style="color: black;">Thiri Htet</b></sub>
+        <sub><b>Thiri Htet</b></sub>
       </a>
       <br />
-      <a href="https://github.com/Thiri-htet04/Thiri-htet04.github.io">Repo</a>
+      <a href="https://github.com/Thiri-htet04/Thiri-htet04.github.io">📁 Repo</a>
     </td>
     <td align="center">
       <a href="https://github.com/Kaungms">
-        <img src="https://github.com/Kaungms.png" width="80px;" alt="Kaung Myat San" style="border-radius: 50%;"/>
+        <img src="https://github.com/Kaungms.png?size=100" width="100" height="100" style="border-radius:50%;" alt="Kaung Myat San"/>
         <br />
-        <sub><b style="color: black;">Kaung Myat San</b></sub>
+        <sub><b>Kaung Myat San</b></sub>
       </a>
       <br />
-      <a href="https://github.com/Kaungms/Kaungms.github.io">Repo</a>
+      <a href="https://github.com/Kaungms/Kaungms.github.io">📁 Repo</a>
     </td>
   </tr>
 </table>
