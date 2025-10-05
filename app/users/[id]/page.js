@@ -116,13 +116,13 @@ export default function UserProfile() {
 
   const getOrderStatusBadgeColor = (status) => {
     const colors = {
-      pending: 'bg-[#FFDAB9] text-[#292524]',
-      confirmed: 'bg-[#14B8A6] bg-opacity-20 text-[#14B8A6]',
-      shipped: 'bg-purple-100 text-purple-800',
-      delivered: 'bg-[#22C55E] bg-opacity-20 text-[#22C55E]',
-      cancelled: 'bg-[#DC2626] bg-opacity-20 text-[#DC2626]'
+      pending: 'bg-[#F59E0B] text-white font-semibold shadow-sm',
+      confirmed: 'bg-[#22C55E] text-white font-semibold shadow-sm',
+      shipped: 'bg-[#8B5CF6] text-white font-semibold shadow-sm',
+      delivered: 'bg-[#14B8A6] text-white font-semibold shadow-sm',
+      cancelled: 'bg-[#DC2626] text-white font-semibold shadow-sm'
     };
-    return colors[status] || 'bg-[#F5F5F4] text-[#292524]';
+    return colors[status] || 'bg-[#78716C] text-white font-semibold shadow-sm';
   };
 
   const handleDeleteProduct = async (productId) => {
