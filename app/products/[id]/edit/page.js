@@ -266,7 +266,7 @@ export default function EditProduct() {
 
       if (response.ok) {
         alert('Product updated successfully!');
-        router.push('/profile');
+        router.push(`/users/${session.user.id}`);
       } else {
         alert(data.message || 'Failed to update product');
       }
