@@ -14,48 +14,77 @@
 
 #### 🔐 **User Management**
 
-- Secure user authentication and registration system using NextAuth.js
-- Comprehensive user profiles with editable information
-- Password management and account security features
-- User discovery and community browsing
+Manage your account securely and interact with other users.
+- Register and log in using **NextAuth.js**
+- Edit and update user profiles
+- Manage passwords and account security
+- Discover and browse community members
 
 #### 📦 **Product Management**
 
-- Create detailed product listings with multiple image uploads
-- Advanced product categorization (Electronics, Clothing, Books, Furniture, Sports, Toys, Automotive, Home, Other)
-- Condition-based pricing (New, Like New, Good, Fair, Poor)
-- Year-based product information for accurate valuation
-- Edit and delete functionality for product owners
-- Mark items as sold when transactions complete
+Easily create and manage listings for secondhand items.
+- Upload multiple product images  
+- Categorize items (Electronics, Clothing, Books, Furniture, Sports, Toys, Automotive, Home, Other) 
+- Set pricing based on condition (New, Like New, Good, Fair, Poor)  
+- Edit, delete, or mark items as sold  
 
 #### 🛒 **Order System**
 
-- Streamlined order creation and management
-- Separate buyer and seller dashboards
-- Order status tracking (Pending, Confirmed, Cancelled)
-- Transaction history and management
+Handle transactions between buyers and sellers efficiently.
+- Buyers can place orders for available products  
+- Sellers can confirm, cancel, or mark orders as completed  
+- Order status tracking (Pending → Confirmed → Cancelled)  
+- View transaction history in user dashboard 
 
 #### 🖼️ **Media Management**
 
-- Multiple image upload support for products
-- Cloudinary integration for optimized image storage and delivery
-- Image preview and management during listing creation
-- Responsive image display with zoom functionality
+- Upload and preview multiple product images  
+- **Cloudinary** integration for optimized image storage and delivery  
+- Responsive image display with zoom and lightbox support  
 
 #### 💻 **Modern User Interface**
 
-- Responsive design that works seamlessly across all devices
-- Tailwind CSS for modern, clean styling
-- Interactive product galleries with full-screen viewing
-- Intuitive navigation and search capabilities
+- Fully responsive design for mobile and desktop  
+- Styled with **Tailwind CSS** for a clean and modern layout  
+- Smooth navigation with loading states and error handling  
+- Interactive product galleries and intuitive browsing  
 - Loading states and error handling for better UX
 
 #### 🔍 **Browse & Discover**
 
-- Homepage product showcase with filtering capabilities
-- Detailed product pages with comprehensive information
-- User profile pages displaying all listings and statistics
-- Community member directory
+- Filter, sort, and search products easily  
+- Homepage showcase of featured items  
+- Individual product detail pages with user info and listing stats  
+- View all listings from a specific user  
+
+## ⚙️ CRUD Functionalities
+
+Our system fully supports **Create, Read, Update, and Delete** operations across all major modules.
+
+### 🧍‍♂️ User Management
+| Operation | Description |
+|------------|--------------|
+| **Create** | Users can register new accounts through secure authentication. |
+| **Read** | View user profiles and browse other community members. |
+| **Update** | Edit personal information, change passwords, and manage profiles. |
+| **Delete** | Users can delete their accounts if they wish to leave the platform. |
+
+### 📦 Product Management
+| Operation | Description |
+|------------|--------------|
+| **Create** | Sellers can list new products with details and multiple images. |
+| **Read** | Buyers can browse all product listings and view item details. |
+| **Update** | Sellers can edit product info, update price, or mark items as sold. |
+| **Delete** | Sellers can remove listings that are no longer available. |
+
+### 🛒 Order Management
+| Operation | Description |
+|------------|--------------|
+| **Create** | Buyers can place orders for available products. |
+| **Read** | Both buyers and sellers can view order details and history. |
+| **Update** | Order status can be updated (Pending → Confirmed → Completed). |
+| **Delete** | Cancelled orders are removed from active lists. |
+
 
 ## Tech Stack
 
