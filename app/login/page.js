@@ -35,28 +35,28 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-[#F5F5F4]">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center text-gray-900">
+        <h1 className="text-2xl font-bold text-center text-[#292524]">
           Log in to your Account
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="text-sm font-medium text-[#292524]">
               Email
             </label>
             <input
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               id="email"
-              className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900 bg-white"
+              className="w-full px-4 py-2 mt-2 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#14B8A6] text-[#292524] bg-white"
               required
             />
           </div>
           <div>
             <label
               htmlFor="password"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium text-[#292524]"
             >
               Password
             </label>
@@ -64,13 +64,13 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               id="password"
-              className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900 bg-white"
+              className="w-full px-4 py-2 mt-2 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#14B8A6] text-[#292524] bg-white"
               required
             />
           </div>
 
           {error && (
-            <div className="px-4 py-2 text-sm text-red-600 bg-red-100 border border-red-200 rounded-md">
+            <div className="px-4 py-2 text-sm text-[#DC2626] bg-red-50 border border-red-200 rounded-md">
               {error}
             </div>
           )}
@@ -78,15 +78,15 @@ export default function Login() {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full px-4 py-2 font-bold text-white bg-[#14B8A6] rounded-md hover:bg-[#0d9488] focus:outline-none focus:ring-2 focus:ring-[#14B8A6]"
             >
               Log In
             </button>
           </div>
         </form>
-        <div className="text-sm text-center text-gray-600">
+        <div className="text-sm text-center text-stone-600">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-blue-600 hover:underline">
+          <Link href="/signup" className="text-[#14B8A6] hover:underline">
             Sign up
           </Link>
         </div>

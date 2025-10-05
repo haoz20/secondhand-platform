@@ -101,13 +101,13 @@ export default function UserProfile() {
 
   const getConditionBadgeColor = (condition) => {
     const colors = {
-      new: 'bg-green-100 text-green-800',
-      like_new: 'bg-blue-100 text-blue-800',
-      good: 'bg-yellow-100 text-yellow-800',
-      fair: 'bg-orange-100 text-orange-800',
-      poor: 'bg-red-100 text-red-800'
+      new: 'bg-[#22C55E] text-white font-semibold shadow-sm',
+      like_new: 'bg-[#14B8A6] text-white font-semibold shadow-sm',
+      good: 'bg-[#FBBF24] text-white font-semibold shadow-sm',
+      fair: 'bg-[#F97316] text-white font-semibold shadow-sm',
+      poor: 'bg-[#DC2626] text-white font-semibold shadow-sm'
     };
-    return colors[condition] || 'bg-gray-100 text-gray-800';
+    return colors[condition] || 'bg-[#78716C] text-white font-semibold shadow-sm';
   };
 
   const formatCondition = (condition) => {
@@ -116,13 +116,13 @@ export default function UserProfile() {
 
   const getOrderStatusBadgeColor = (status) => {
     const colors = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      confirmed: 'bg-blue-100 text-blue-800',
+      pending: 'bg-[#FFDAB9] text-[#292524]',
+      confirmed: 'bg-[#14B8A6] bg-opacity-20 text-[#14B8A6]',
       shipped: 'bg-purple-100 text-purple-800',
-      delivered: 'bg-green-100 text-green-800',
-      cancelled: 'bg-red-100 text-red-800'
+      delivered: 'bg-[#22C55E] bg-opacity-20 text-[#22C55E]',
+      cancelled: 'bg-[#DC2626] bg-opacity-20 text-[#DC2626]'
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || 'bg-[#F5F5F4] text-[#292524]';
   };
 
   const handleDeleteProduct = async (productId) => {
@@ -334,10 +334,10 @@ export default function UserProfile() {
 
   if (loading) {
     return (
-      <div className="flex-grow flex items-center justify-center bg-gray-50">
+      <div className="flex-grow flex items-center justify-center bg-[#F5F5F4]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading profile...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#14B8A6] mx-auto mb-4"></div>
+          <p className="text-stone-600">Loading profile...</p>
         </div>
       </div>
     );
@@ -345,16 +345,16 @@ export default function UserProfile() {
 
   if (error || !user) {
     return (
-      <div className="flex-grow flex items-center justify-center bg-gray-50">
+      <div className="flex-grow flex items-center justify-center bg-gradient-to-br from-[#14B8A6]/10 via-white to-[#FFDAB9]/20">
         <div className="text-center max-w-md px-4">
           <div className="text-6xl mb-4">😕</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">User Not Found</h2>
-          <p className="text-gray-600 mb-6">
+          <h2 className="text-2xl font-bold text-[#292524] mb-2">User Not Found</h2>
+          <p className="text-stone-600 mb-6">
             The user profile you&apos;re looking for doesn&apos;t exist.
           </p>
           <Link
             href="/"
-            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+            className="inline-block bg-[#14B8A6] text-white px-6 py-3 rounded-lg hover:bg-[#0d9488] transition shadow-md hover:shadow-lg"
           >
             Back to Marketplace
           </Link>
@@ -364,19 +364,19 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="flex-grow bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="flex-grow bg-gradient-to-br from-[#14B8A6]/10 via-white to-[#FFDAB9]/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* User Header */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
           <div className="flex flex-col md:flex-row items-center md:items-start justify-between">
             <div className="flex flex-col md:flex-row items-center md:items-start">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-4xl font-bold mb-4 md:mb-0 md:mr-6">
+              <div className="w-24 h-24 bg-gradient-to-br from-[#14B8A6] to-[#0d9488] rounded-full flex items-center justify-center text-white text-4xl font-bold mb-4 md:mb-0 md:mr-6">
                 {user.name?.charAt(0).toUpperCase() || user.username?.charAt(0).toUpperCase() || 'U'}
               </div>
               <div className="text-center md:text-left">
-                <h1 className="text-3xl font-bold text-gray-900">{user.name || user.username}</h1>
-                <p className="text-gray-600 mt-1">@{user.username}</p>
-                <p className="text-sm text-gray-500 mt-2">
+                <h1 className="text-3xl font-bold text-[#292524]">{user.name || user.username}</h1>
+                <p className="text-stone-600 mt-1">@{user.username}</p>
+                <p className="text-sm text-stone-500 mt-2">
                   Member since {new Date(user.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                 </p>
               </div>
@@ -387,7 +387,7 @@ export default function UserProfile() {
               <div className="flex gap-3 mt-4 md:mt-0">
                 <button
                   onClick={handleEditProfileClick}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+                  className="px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#0d9488] transition shadow-md hover:shadow-lg flex items-center gap-2"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -396,7 +396,7 @@ export default function UserProfile() {
                 </button>
                 <button
                   onClick={() => setShowDeleteAccountModal(true)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2"
+                  className="px-4 py-2 bg-gradient-to-r from-[#DC2626] to-[#b91c1c] text-white rounded-lg hover:from-[#b91c1c] hover:to-[#991b1b] transition shadow-md hover:shadow-lg flex items-center gap-2"
                 >
                   Delete Account
                 </button>
@@ -557,7 +557,7 @@ export default function UserProfile() {
                 <button
                   onClick={handleDeleteAccount}
                   disabled={deletingAccount}
-                  className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-[#DC2626] to-[#b91c1c] text-white rounded-lg hover:from-[#b91c1c] hover:to-[#991b1b] transition disabled:opacity-50"
                 >
                   {deletingAccount ? 'Deleting...' : 'Delete Forever'}
                 </button>
@@ -609,8 +609,8 @@ export default function UserProfile() {
                 onClick={() => setActiveTab('products')}
                 className={`flex-1 px-6 py-4 text-sm font-medium transition ${
                   activeTab === 'products'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                    ? 'bg-[#14B8A6] text-white'
+                    : 'bg-white text-[#292524] hover:bg-stone-50'
                 }`}
               >
                 My Products ({products.length})
@@ -619,8 +619,8 @@ export default function UserProfile() {
                 onClick={() => setActiveTab('buying')}
                 className={`flex-1 px-6 py-4 text-sm font-medium transition ${
                   activeTab === 'buying'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                    ? 'bg-[#14B8A6] text-white'
+                    : 'bg-white text-[#292524] hover:bg-stone-50'
                 }`}
               >
                 Buying Orders ({buyOrders.length})
@@ -629,8 +629,8 @@ export default function UserProfile() {
                 onClick={() => setActiveTab('selling')}
                 className={`flex-1 px-6 py-4 text-sm font-medium transition ${
                   activeTab === 'selling'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                    ? 'bg-[#14B8A6] text-white'
+                    : 'bg-white text-[#292524] hover:bg-stone-50'
                 }`}
               >
                 Selling Orders ({sellOrders.length})
@@ -642,20 +642,20 @@ export default function UserProfile() {
         {/* Content based on active tab */}
         {(!isOwnProfile || activeTab === 'products') && (
           <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            <h2 className="text-2xl font-bold text-[#292524] mb-6">
               {isOwnProfile ? 'My Products' : `Products by ${user.name || user.username}`}
             </h2>
             
             {products.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">📭</div>
-                <p className="text-gray-500 text-lg">
+                <p className="text-stone-600 text-lg">
                   {isOwnProfile ? "You haven't listed any products yet." : "This user hasn't listed any products yet."}
                 </p>
                 {isOwnProfile && (
                   <Link
                     href="/sell"
-                    className="mt-4 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+                    className="mt-4 inline-block bg-[#14B8A6] text-white px-6 py-3 rounded-lg hover:bg-[#0d9488] transition shadow-md hover:shadow-lg"
                   >
                     List Your First Product
                   </Link>
@@ -666,11 +666,11 @@ export default function UserProfile() {
                 {products.map((product) => (
                   <div
                     key={product._id}
-                    className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:shadow-xl hover:border-blue-300 transition-all duration-300"
+                    className="bg-white border-2 border-stone-200 rounded-lg overflow-hidden hover:shadow-xl hover:border-[#14B8A6] transition-all duration-300"
                   >
                     {/* Product Image */}
                     <Link href={`/products/${product._id}`}>
-                      <div className="relative h-48 bg-gray-100">
+                      <div className="relative h-48 bg-stone-100">
                         <Image
                           src={
                             Array.isArray(product.imageUrl) && product.imageUrl.length > 0
@@ -685,7 +685,7 @@ export default function UserProfile() {
                         {/* Sold Overlay Badge */}
                         {product.isSold && (
                           <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
-                            <div className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold text-xl transform rotate-12">
+                            <div className="bg-[#DC2626] text-white px-6 py-3 rounded-lg font-bold text-xl transform rotate-12">
                               SOLD OUT
                             </div>
                           </div>
@@ -697,7 +697,7 @@ export default function UserProfile() {
                           </span>
                         </div>
                         <div className="absolute top-2 left-2">
-                          <span className="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 capitalize">
+                          <span className="px-2 py-1 rounded-full text-xs font-semibold bg-[#FFDAB9] text-[#292524] capitalize">
                             {product.category}
                           </span>
                         </div>
@@ -707,24 +707,24 @@ export default function UserProfile() {
                     {/* Product Details */}
                     <div className="p-4">
                       <Link href={`/products/${product._id}`}>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-blue-600 transition truncate">
+                        <h3 className="text-lg font-semibold text-[#292524] mb-2 hover:text-[#14B8A6] transition truncate">
                           {product.productName}
                         </h3>
-                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                        <p className="text-stone-600 text-sm mb-3 line-clamp-2">
                           {product.description}
                         </p>
 
                         <div className="flex items-center justify-between mb-2">
-                          <div className="text-2xl font-bold text-blue-600">
+                          <div className="text-2xl font-bold text-[#14B8A6]">
                             ฿{product.price.toFixed(2)}
                           </div>
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-stone-500">
                             Year: {product.year}
                           </div>
                         </div>
 
-                        <div className="pt-3 border-t border-gray-200">
-                          <p className="text-xs text-gray-500">
+                        <div className="pt-3 border-t border-stone-200">
+                          <p className="text-xs text-stone-500">
                             Listed {new Date(product.createdAt).toLocaleDateString()}
                           </p>
                         </div>
@@ -732,12 +732,12 @@ export default function UserProfile() {
                       
                       {/* Action Buttons - Only visible for own profile */}
                       {isOwnProfile && (
-                        <div className="mt-4 pt-3 border-t border-gray-200 flex gap-2">
+                        <div className="mt-4 pt-3 border-t border-stone-200 flex gap-2">
                           {!product.isSold && (
                             <>
                               <Link
                                 href={`/products/${product._id}/edit`}
-                                className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition text-center"
+                                className="flex-1 px-3 py-2 bg-[#14B8A6] text-white text-sm rounded-lg hover:bg-[#0d9488] transition text-center shadow-sm"
                               >
                                 Edit
                               </Link>
@@ -746,7 +746,7 @@ export default function UserProfile() {
                                   e.preventDefault();
                                   handleMarkAsSold(product._id);
                                 }}
-                                className="flex-1 px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition"
+                                className="flex-1 px-3 py-2 bg-[#22C55E] text-white text-sm rounded-lg hover:bg-[#16a34a] transition shadow-sm"
                               >
                                 Mark Sold
                               </button>
@@ -758,7 +758,7 @@ export default function UserProfile() {
                               handleDeleteProduct(product._id);
                             }}
                             disabled={deleting === product._id}
-                            className="flex-1 px-3 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                            className="flex-1 px-3 py-2 bg-gradient-to-r from-[#DC2626] to-[#b91c1c] text-white text-sm rounded-lg hover:from-[#b91c1c] hover:to-[#991b1b] transition disabled:opacity-50 shadow-sm"
                           >
                             {deleting === product._id ? '...' : 'Delete'}
                           </button>
@@ -775,7 +775,7 @@ export default function UserProfile() {
         {/* Buy Orders Tab */}
         {isOwnProfile && activeTab === 'buying' && (
           <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">My Purchases</h2>
+            <h2 className="text-2xl font-bold text-[#292524] mb-6">My Purchases</h2>
             
             {buyOrders.length === 0 ? (
               <div className="text-center py-12">
@@ -783,7 +783,7 @@ export default function UserProfile() {
                 <p className="text-gray-500 text-lg">You haven&apos;t purchased any products yet.</p>
                 <Link
                   href="/"
-                  className="mt-4 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+                  className="mt-4 inline-block bg-[#14B8A6] text-white px-6 py-3 rounded-lg hover:bg-[#0d9488] transition"
                 >
                   Browse Marketplace
                 </Link>
@@ -846,7 +846,7 @@ export default function UserProfile() {
                             <button
                               onClick={() => handleUpdateOrderStatus(order._id, 'cancelled', 'buy')}
                               disabled={updatingOrderStatus === order._id}
-                              className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                              className="px-4 py-2 bg-gradient-to-r from-[#DC2626] to-[#b91c1c] text-white text-sm rounded-lg hover:from-[#b91c1c] hover:to-[#991b1b] transition disabled:opacity-50"
                             >
                               {updatingOrderStatus === order._id ? 'Cancelling...' : 'Cancel Order'}
                             </button>
@@ -855,7 +855,7 @@ export default function UserProfile() {
                             <button
                               onClick={() => handleUpdateOrderStatus(order._id, 'cancelled', 'buy')}
                               disabled={updatingOrderStatus === order._id}
-                              className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                              className="px-4 py-2 bg-gradient-to-r from-[#DC2626] to-[#b91c1c] text-white text-sm rounded-lg hover:from-[#b91c1c] hover:to-[#991b1b] transition disabled:opacity-50"
                             >
                               {updatingOrderStatus === order._id ? 'Cancelling...' : 'Cancel Order'}
                             </button>
@@ -955,7 +955,7 @@ export default function UserProfile() {
                               <button
                                 onClick={() => handleUpdateOrderStatus(order._id, 'cancelled', 'sell')}
                                 disabled={updatingOrderStatus === order._id}
-                                className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+                                className="px-4 py-2 bg-gradient-to-r from-[#DC2626] to-[#b91c1c] text-white text-sm rounded-lg hover:from-[#b91c1c] hover:to-[#991b1b] transition disabled:opacity-50"
                               >
                                 {updatingOrderStatus === order._id ? 'Cancelling...' : 'Cancel Order'}
                               </button>

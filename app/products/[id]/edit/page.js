@@ -319,7 +319,7 @@ export default function EditProduct() {
                     {existingImages.map((url, index) => (
                       <div key={`existing-${index}`} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 border-2 border-blue-300">
                         <Image src={url} alt={`Existing ${index + 1}`} fill className="object-cover" />
-                        <button type="button" onClick={() => handleRemoveExistingImage(index)} className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition">
+                        <button type="button" onClick={() => handleRemoveExistingImage(index)} className="absolute top-2 right-2 bg-gradient-to-r from-[#DC2626] to-[#b91c1c] text-white rounded-full p-1 hover:from-[#b91c1c] hover:to-[#991b1b] transition">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>
@@ -339,7 +339,7 @@ export default function EditProduct() {
                     {newImagePreviews.map((preview, index) => (
                       <div key={`new-${index}`} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 border-2 border-green-300">
                         <Image src={preview} alt={`New ${index + 1}`} fill className="object-cover" />
-                        <button type="button" onClick={() => removeNewImage(index)} className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition">
+                        <button type="button" onClick={() => removeNewImage(index)} className="absolute top-2 right-2 bg-gradient-to-r from-[#DC2626] to-[#b91c1c] text-white rounded-full p-1 hover:from-[#b91c1c] hover:to-[#991b1b] transition">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>

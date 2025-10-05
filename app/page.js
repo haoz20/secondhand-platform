@@ -65,13 +65,13 @@ export default function Home() {
 
   const getConditionBadgeColor = (condition) => {
     const colors = {
-      new: 'bg-green-100 text-green-800',
-      like_new: 'bg-blue-100 text-blue-800',
-      good: 'bg-yellow-100 text-yellow-800',
-      fair: 'bg-orange-100 text-orange-800',
-      poor: 'bg-red-100 text-red-800'
+      new: 'bg-[#22C55E] text-white font-semibold shadow-sm',
+      like_new: 'bg-[#14B8A6] text-white font-semibold shadow-sm',
+      good: 'bg-[#FBBF24] text-white font-semibold shadow-sm',
+      fair: 'bg-[#F97316] text-white font-semibold shadow-sm',
+      poor: 'bg-[#DC2626] text-white font-semibold shadow-sm'
     };
-    return colors[condition] || 'bg-gray-100 text-gray-800';
+    return colors[condition] || 'bg-[#78716C] text-white font-semibold shadow-sm';
   };
 
   const formatCondition = (condition) => {
@@ -83,26 +83,26 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-grow">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+      <div className="bg-gradient-to-r from-[#06B6D4] via-[#14B8A6] to-[#10B981] text-white py-16 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">
             Welcome to YaungWel
           </h1>
-          <p className="text-xl md:text-2xl text-blue-100">
+          <p className="text-xl md:text-2xl text-white text-opacity-90">
             Buy and sell pre-owned items with ease
           </p>
         </div>
       </div>
 
       {/* Products Section */}
-      <div className="flex-grow bg-gray-50">
+      <div className="flex-grow bg-gradient-to-br from-[#14B8A6]/10 via-white to-[#FFDAB9]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Available Products</h2>
+          <h2 className="text-3xl font-bold text-[#292524]">Available Products</h2>
           {session && (
             <Link
               href="/sell"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+              className="bg-[#14B8A6] text-white px-6 py-2 rounded-lg hover:bg-[#0d9488] transition font-medium"
             >
               + Sell Item
             </Link>
@@ -111,15 +111,15 @@ export default function Home() {
 
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <div className="text-gray-600 text-lg">Loading products...</div>
+            <div className="text-[#292524] text-lg">Loading products...</div>
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No products available yet.</p>
+            <p className="text-stone-600 text-lg">No products available yet.</p>
             {session && (
               <Link
                 href="/sell"
-                className="inline-block mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+                className="inline-block mt-4 bg-[#14B8A6] text-white px-6 py-3 rounded-lg hover:bg-[#0d9488] transition"
               >
                 Be the first to sell!
               </Link>
@@ -145,7 +145,7 @@ export default function Home() {
                   {/* Sold Overlay Badge */}
                   {product.isSold && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
-                      <div className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold text-xl transform rotate-12">
+                      <div className="bg-[#DC2626] text-white px-6 py-3 rounded-lg font-bold text-xl transform rotate-12">
                         SOLD OUT
                       </div>
                     </div>
@@ -157,7 +157,7 @@ export default function Home() {
                     </span>
                   </div>
                   <div className="absolute top-2 left-2">
-                    <span className="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 capitalize">
+                    <span className="px-2 py-1 rounded-full text-xs font-semibold bg-[#FFDAB9] text-[#292524] capitalize">
                       {product.category}
                     </span>
                   </div>
@@ -165,26 +165,26 @@ export default function Home() {
 
                 {/* Product Details */}
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 truncate">
+                  <h3 className="text-lg font-semibold text-[#292524] mb-2 truncate">
                     {product.productName}
                   </h3>
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                  <p className="text-stone-600 text-sm mb-3 line-clamp-2">
                     {product.description}
                   </p>
 
                   {/* Price and View Details */}
                   <div className="flex items-center justify-between">
-                    <div className="text-2xl font-bold text-blue-600">
+                    <div className="text-2xl font-bold text-[#14B8A6]">
                       ฿{product.price.toFixed(2)}
                     </div>
-                    <div className="px-4 py-2 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition">
+                    <div className="px-4 py-2 rounded-lg font-medium bg-[#14B8A6] text-white hover:bg-[#0d9488] transition">
                       View Details
                     </div>
                   </div>
 
                   {/* Created Date */}
-                  <div className="mt-3 pt-3 border-t border-gray-200">
-                    <p className="text-xs text-gray-500">
+                  <div className="mt-3 pt-3 border-t border-stone-200">
+                    <p className="text-xs text-stone-500">
                       Listed {new Date(product.createdAt).toLocaleDateString()}
                     </p>
                   </div>

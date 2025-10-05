@@ -9,12 +9,12 @@ export default function NavigationBar() {
   const { data: session } = useSession();
 
   return (
-    <nav className="bg-white shadow-md border-b border-gray-200">
+    <nav className="sticky top-0 z-50 bg-gradient-to-r from-[#06B6D4]/20 via-[#FFDAB9]/30 to-[#F59E0B]/20 shadow-lg border-b border-white/50 backdrop-blur-md">
       <div className="max-w mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="text-2xl font-bold text-blue-600">
+            <Link href="/" className="text-2xl font-bold text-[#0F4C75] hover:text-[#14B8A6]">
               YaungWel
             </Link>
           </div>
@@ -25,29 +25,29 @@ export default function NavigationBar() {
               <>
                 <Link
                   href="/users"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
+                  className="text-[#292524] hover:text-[#14B8A6] px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Users
                 </Link>
                 <Link
                   href="/sell"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
+                  className="text-[#292524] hover:text-[#14B8A6] px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Sell Item
                 </Link>
                 <Link
                   href={`/users/${session.user.id}`}
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
+                  className="text-[#292524] hover:text-[#14B8A6] px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   My Profile
                 </Link>
-                <span className="text-gray-700 text-sm">
+                <span className="text-[#292524] text-sm">
                   <AccountBoxIcon className="inline-block mr-1" />
                   {session.user?.name || session.user?.email}
                 </span>
                 <button
                   onClick={() => signOut({ callbackUrl: `${window.location.origin}/second-hand-marketplace` })}
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition"
+                  className="bg-gradient-to-r from-[#DC2626] to-[#b91c1c] text-white px-4 py-2 rounded-md text-sm font-medium hover:from-[#b91c1c] hover:to-[#991b1b] transition shadow-md"
                 >
                   Sign Out
                 </button>
@@ -56,19 +56,19 @@ export default function NavigationBar() {
               <>
               <Link
                   href="/users"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
+                  className="text-[#292524] hover:text-[#14B8A6] px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Users
                 </Link>
                 <Link
                   href="/login"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition"
+                  className="text-[#292524] hover:text-[#14B8A6] px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition"
+                  className="bg-[#14B8A6] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-[#0d9488] transition"
                 >
                   Sign Up
                 </Link>
@@ -81,7 +81,7 @@ export default function NavigationBar() {
             {session ? (
               <Link
                 href={`/users/${session.user.id}`}
-                className="bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="bg-[#14B8A6] text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Profile
               </Link>
@@ -89,13 +89,13 @@ export default function NavigationBar() {
               <>
                 <Link
                   href="/login"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-[#292524] hover:text-[#14B8A6] px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="bg-[#14B8A6] text-white px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Sign Up
                 </Link>
